@@ -1,7 +1,6 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:watchsteroids/game/cubit/cubit.dart';
-import 'package:watchsteroids/game/game/weatchsteroids_game.dart';
+import 'package:watchsteroids/game/game.dart';
 
 class GameBody extends StatelessWidget {
   const GameBody({super.key});
@@ -10,7 +9,9 @@ class GameBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GameCubit, GameState>(
       builder: (context, state) {
-        return const GameWrapper();
+        return const RotaryInputController(
+          child: GameWrapper(),
+        );
       },
     );
   }
@@ -24,15 +25,30 @@ class GameWrapper extends StatefulWidget {
 }
 
 class _GameWrapperState extends State<GameWrapper> {
-  late final game = WatchsteroidsGame();
+  late final gameCubit = context.read<GameCubit>();
+
+  late final game = WatchsteroidsGame(gameCubit: gameCubit);
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints:  BoxConstraints.loose(
-        const Size.square(400),
+    return Focus(
+      autofocus: true,
+      child: ColoredBox(
+        color: Colors.black,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints.loose(
+              const Size.square(400),
+            ),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: TouchInputController(
+                child: GameWidget(game: game),
+              ),
+            ),
+          ),
+        ),
       ),
-      child: GameWidget(game: game),
     );
   }
 }

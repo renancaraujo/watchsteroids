@@ -22,7 +22,7 @@ class GamePage extends StatelessWidget {
         body: GameView(),
       ),
     );
-  }    
+  }
 }
 
 /// {@template game_view}

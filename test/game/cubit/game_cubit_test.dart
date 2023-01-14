@@ -16,7 +16,7 @@ void main() {
 
     test('initial state has default value for customProperty', () {
       final gameCubit = GameCubit();
-      expect(gameCubit.state, equals(GameState()));
+      expect(gameCubit.state.shipAngle, equals(0));
     });
   });
 }

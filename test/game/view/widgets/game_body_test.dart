@@ -6,7 +6,7 @@ import 'package:watchsteroids/game/game.dart';
 
 void main() {
   group('GameBody', () {
-    testWidgets('renders Text', (tester) async { 
+    testWidgets('renders Text', (tester) async {
       await tester.pumpWidget(
         BlocProvider(
           create: (context) => GameCubit(),

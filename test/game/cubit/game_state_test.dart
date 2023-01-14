@@ -7,9 +7,9 @@ void main() {
   group('GameState', () {
     test('supports value equality', () {
       expect(
-        GameState(),
+        GameState(1),
         equals(
-          const GameState(),
+          const GameState(1),
         ),
       );
     });
@@ -17,11 +17,10 @@ void main() {
     group('constructor', () {
       test('can be instantiated', () {
         expect(
-          const GameState(),
+          const GameState(1),
           isNotNull,
         );
       });
     });
-
   });
 }
