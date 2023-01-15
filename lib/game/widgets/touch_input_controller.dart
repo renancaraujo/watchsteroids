@@ -76,7 +76,6 @@ class _TouchInputControllerInnerState
 
     final offsetToCenter = details.localPosition - size.center(Offset.zero);
 
-
     final currentAngle = offsetToCenter.direction;
 
     var angleDelta = currentAngle - previousAngle;

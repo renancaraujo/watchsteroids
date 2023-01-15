@@ -33,8 +33,8 @@ class Cannon extends Component
     );
 
     // if (parent.canShoot) {}
-      gameRef.flameMultiBlocProvider.add(
-        Shot(
+    gameRef.flameMultiBlocProvider.add(
+      Shot(
         angle: parent.angle,
         position: shotPosition,
       ),

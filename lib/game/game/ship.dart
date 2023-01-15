@@ -91,7 +91,7 @@ class ShipContainer extends PositionComponent
     );
 
     await ship.add(
-      CameraSpot(gameCubit)..position = Vector2(side / 2, side / 2 - 40),
+      CameraSpot(gameCubit)..position = Vector2(side / 2, side / 2 - 50),
     );
   }
 

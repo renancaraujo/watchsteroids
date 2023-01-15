@@ -34,12 +34,17 @@ class _RotaryInputControllerState extends State<_RotaryInputControllerInner> {
   late final StreamSubscription<RotaryEvent> rotarySubscription;
 
   late final rotationCubit = context.read<RotationCubit>();
+  late final gameCubit = context.read<GameCubit>();
 
   @override
   void initState() {
     super.initState();
 
     rotarySubscription = rotaryEvents.listen((RotaryEvent event) {
+      if (gameCubit.state == GameState.gameOver) {
+        return;
+      }
+
       final double factor;
       if (event.direction == RotaryDirection.clockwise) {
         factor = 1;

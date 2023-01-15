@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:watchsteroids/game/game.dart';
 
 class InitialOverlay extends StatelessWidget {
-  const InitialOverlay({Key? key}) : super(key: key);
+  const InitialOverlay({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
         final gameCubit = context.read<GameCubit>();
         if (gameCubit.isPlaying) {
@@ -14,13 +15,15 @@ class InitialOverlay extends StatelessWidget {
         }
         context.read<GameCubit>().startGame();
       },
-      child: const Align(
-        alignment: Alignment(0.0, 0.6),
-        child: Text(
-          'Tap to start',
-          style: TextStyle(
-            color: Color(0xFFFBE294),
-            fontSize: 12,
+      child: const SizedBox.expand(
+        child: Align(
+          alignment: Alignment(0, 0.6),
+          child: Text(
+            'Tap to start',
+            style: TextStyle(
+              color: Color(0xFFFBE294),
+              fontSize: 12,
+            ),
           ),
         ),
       ),
@@ -29,29 +32,43 @@ class InitialOverlay extends StatelessWidget {
 }
 
 class GameOverOverlay extends StatelessWidget {
-  const GameOverOverlay({Key? key}) : super(key: key);
+  const GameOverOverlay({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      behavior: HitTestBehavior.opaque,
+      onTapDown: (_) {
         final gameCubit = context.read<GameCubit>();
         if (gameCubit.state != GameState.gameOver) {
           return;
         }
         context.read<GameCubit>().setInitial();
       },
-      child: const Align(
-        alignment: Alignment(0.0, 0.6),
-        child: Text(
-          'Tap to continue',
-          style: TextStyle(
-            color: Color(0xFFFBE294),
-            fontSize: 12,
+      child: SizedBox.expand(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 40),
+          child: Column(
+            children: const [
+              Text(
+                'Game over',
+                style: TextStyle(
+                  color: Color(0xFFFBE294),
+                  fontSize: 12,
+                ),
+              ),
+              Spacer(),
+              Text(
+                'Tap to continue',
+                style: TextStyle(
+                  color: Color(0xFFFBE294),
+                  fontSize: 12,
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 }
-

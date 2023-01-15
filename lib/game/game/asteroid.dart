@@ -94,7 +94,7 @@ class AsteroidSpawner extends Component
     timer = initialTimer;
   }
 
-  static const interval = 3.0;
+  static const interval = 2.0;
 
   late Timer timer;
 
@@ -227,9 +227,7 @@ class Asteroid extends PositionComponent
       moveAlongPathEffect = MoveAlongPathEffect(
         path,
         LinearEffectController(random.nextDouble() * 10 + 12),
-        onComplete: () {
-          gameRef.flameMultiBlocProvider.remove(this);
-        },
+        onComplete: removeFromParent,
       ),
     );
   }

@@ -21,7 +21,7 @@ class NoiseOverlay extends SpriteComponent with HasGameRef<WatchsteroidsGame> {
   @override
   void update(double dt) {
     super.update(dt);
-    position = gameRef.camera.position * 0.35;
+    position = gameRef.camera.position * -0.35;
   }
 }
 

@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 
 class GameCubit extends Cubit<GameState> {
   GameCubit() : super(GameState.initial);

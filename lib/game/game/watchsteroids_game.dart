@@ -79,8 +79,8 @@ class CameraSubject extends PositionComponent
         );
 
   final effectController = CurvedEffectController(
-    10.5,
-   Curves.elasticOut,
+    0.1,
+    Curves.easeInOut,
   )..setToEnd();
 
   late final moveEffect = MoveCameraSubject(position, effectController);
@@ -91,7 +91,8 @@ class CameraSubject extends PositionComponent
   }
 
   void go({required Vector2 to, bool calm = false}) {
-    (effectController as DurationEffectController)..duration = calm ? 30 : 10.5;
+    effectController.duration = calm ? 10 : 0.5;
+
     moveEffect.go(to: to);
   }
 }
@@ -122,7 +123,6 @@ class MoveCameraSubject extends Effect with EffectTarget<CameraSubject> {
     reset();
     _to = to;
     _from = target.position;
-    (controller as DurationEffectController).duration = 2;
   }
 }
 
@@ -147,19 +147,21 @@ class LogoInitial extends SpriteComponent
   }
 
   late final effectController = EffectController(
-    duration: 1,
+    duration: 2,
   );
 
   @override
   void onNewState(GameState state) {
     switch (state) {
       case GameState.initial:
+        effectController.setToStart();
         add(
           OpacityEffect.to(1, effectController),
         );
         break;
       case GameState.playing:
       case GameState.gameOver:
+        effectController.setToStart();
         add(
           OpacityEffect.to(0, effectController),
         );
