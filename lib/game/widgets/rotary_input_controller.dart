@@ -32,7 +32,7 @@ class _RotaryInputControllerState extends State<RotaryInputController> {
       }
 
       if (event.magnitude == 136.0) {
-        gameCubit.rotateBy(4 * factor * (math.pi / 12));
+        gameCubit.rotateBy(1.72 * factor * (math.pi / 12));
       } else {
         final maxmag = math.max(event.magnitude ?? 10, 10);
         final magn = (math.pi / 12) * (maxmag / 136);

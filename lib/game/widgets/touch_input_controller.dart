@@ -54,7 +54,7 @@ class _TouchInputControllerInnerState
     final offsetToCenter = details.localPosition - size.center(Offset.zero);
     final distanceToCenter = offsetToCenter.distance;
 
-    if (distanceToCenter < size.width * 0.3) {
+    if (distanceToCenter < size.width * 0.1) {
       return;
     }
 
@@ -73,7 +73,7 @@ class _TouchInputControllerInnerState
     final offsetToCenter = details.localPosition - size.center(Offset.zero);
     final distanceToCenter = offsetToCenter.distance;
 
-    if (distanceToCenter < size.width * 0.25) {
+    if (distanceToCenter < size.width * 0.1) {
       setState(() {
         isDragging = false;
       });

@@ -7,55 +7,135 @@ import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/animation.dart';
 import 'package:watchsteroids/game/game.dart';
 
-class Ship extends PositionComponent
+class ShipContainer extends PositionComponent
     with
-        HasGameRef<WatchsteroidsGame>,
-        FlameBlocListenable<GameCubit, GameState> {
-  Ship() : super(anchor: Anchor.center);
+        FlameBlocListenable<GameCubit, GameState>,
+        HasGameRef<WatchsteroidsGame> {
+  ShipContainer()
+      : super(
+          anchor: Anchor.center,
+          position: Vector2.zero(),
+        );
+
+  late final side = 40.0;
+
+  late final ship = Ship(
+    Paint()
+      ..style = PaintingStyle.stroke
+      ..color = WatchsteroidsColors.ship
+      ..strokeWidth = 4.5
+      ..strokeCap = StrokeCap.square
+      ..strokeJoin = StrokeJoin.miter
+      ..strokeMiterLimit = 90
+      ..shader = Gradient.radial(
+        Offset(20, 0),
+        40,
+        [
+          WatchsteroidsColors.ship,
+          Color(0xA6FBE294),
+        ],
+      ),
+  );
+
+  late final shadow = Ship(
+    Paint()
+      ..style = PaintingStyle.stroke
+      ..color = WatchsteroidsColors.shipShadow1
+      ..strokeWidth = 4.0
+      ..strokeCap = StrokeCap.square
+      ..strokeJoin = StrokeJoin.miter
+      ..strokeMiterLimit = 90
+      ..blendMode = BlendMode.colorDodge,
+  );
+
+  late final shadow2 = Ship(
+    Paint()
+      ..style = PaintingStyle.stroke
+      ..color = WatchsteroidsColors.shipShadow2
+      ..strokeWidth = 4.5
+      ..strokeCap = StrokeCap.square
+      ..strokeJoin = StrokeJoin.miter
+      ..strokeMiterLimit = 90
+      ..blendMode = BlendMode.colorDodge,
+  );
+
+  late final path = Path()
+    ..moveTo(side / 2, 0)
+    ..lineTo(side, side)
+    ..lineTo(side / 2, side * 0.7)
+    ..lineTo(0, side)
+    ..close();
 
   @override
   Future<void> onLoad() async {
-    await add(rotateShipEffect);
-    size = Vector2(width, width);
+    await add(shadow2);
+    await add(shadow);
+    await add(ship);
+
+    await ship.add(ShipGlow());
+
+    await ship.add(Cannon());
+
+    await ship.add(
+      CameraSpot()..position = Vector2(side / 2, side / 2 - 40),
+    );
   }
 
   @override
   void onNewState(GameState state) {
-    rotateShipEffect.go(to: state.shipAngle);
+    final from = ship.angle;
+    final to = state.shipAngle;
+
+    final delta = (to - from).abs();
+
+    ship.effectController.duration = ((delta / math.pi) / 1.1) + 0.1;
+    ship.go(to: state.shipAngle);
+
+    shadow.effectController.duration = ship.effectController.duration * 1.5;
+    shadow.go(to: state.shipAngle);
+
+    shadow2.effectController.duration = ship.effectController.duration * 2;
+    shadow2.go(to: state.shipAngle);
   }
+}
 
-  final effectController = CurvedEffectController(0.3, Curves.linear)
-    ..setToEnd();
-
-  late final rotateShipEffect = RotateShipEffect(0.1, effectController);
+class Ship extends PositionComponent
+    with HasGameRef<WatchsteroidsGame>, ParentIsA<ShipContainer> {
+  Ship(this.paint) : super(anchor: Anchor.center);
 
   @override
-  late final width = 40;
+  Future<void> onLoad() async {
+    await add(rotateShipEffect);
+    size = Vector2(parent.side, parent.side);
+  }
 
-  late final path = Path()
-    ..moveTo(width / 2, 0)
-    ..lineTo(width, width)
-    ..lineTo(width / 2, width * 0.7)
-    ..lineTo(0, width)
-    ..close();
+  final effectController = CurvedEffectController(0.1, Curves.easeOutQuint)
+    ..setToEnd();
+
+  late final rotateShipEffect = RotateShipEffect(0.0, effectController);
+
+  final Paint paint;
+
+  bool canShoot = true;
+
+  void go({required double to}) {
+    canShoot = false;
+    rotateShipEffect
+      ..go(to: to)
+      ..onComplete = () {
+        canShoot = true;
+      };
+  }
 
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    canvas.drawPath(
-      path,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..color = WatchsteroidsColors.ship
-        ..strokeWidth = 4.5
-        ..strokeCap = StrokeCap.square
-        ..strokeJoin = StrokeJoin.miter
-        ..strokeMiterLimit = 90,
-    );
+
+    canvas.drawPath(parent.path, paint);
   }
 }
 
-class RotateShipEffect extends Effect with EffectTarget<Ship> {
+class RotateShipEffect extends Effect with EffectTarget<PositionComponent> {
   RotateShipEffect(this._to, super.controller);
 
   @override
@@ -68,12 +148,9 @@ class RotateShipEffect extends Effect with EffectTarget<Ship> {
   late double _from;
 
   void go({required double to}) {
+    reset();
     _to = to;
     _from = target.angle;
-
-    reset();
-    final delta = (_to - _from).abs();
-    (controller as DurationEffectController).duration = (delta / math.pi) / 2;
   }
 
   @override
@@ -85,4 +162,40 @@ class RotateShipEffect extends Effect with EffectTarget<Ship> {
 
   @override
   bool get removeOnFinish => false;
+}
+
+class ShipGlow extends SpriteComponent
+    with HasGameRef<WatchsteroidsGame>, ParentIsA<PositionComponent> {
+  ShipGlow() : super(anchor: Anchor.center);
+
+  @override
+  Future<void> onLoad() async {
+    size = Vector2(270, 270) * 1.5;
+    position = parent.size / 2;
+    position.y -= 20;
+    sprite = await gameRef.loadSprite('shipglow.png');
+
+    angle = math.pi;
+  }
+}
+
+class CameraSpot extends PositionComponent with HasGameRef<WatchsteroidsGame> {
+  CameraSpot()
+      : super(
+          anchor: Anchor.center,
+        );
+
+  final timerInitial = 0.1;
+
+  late var timer = timerInitial;
+
+  @override
+  void update(double dt) {
+    if (timer <= 0) {
+      gameRef.cameraSubject.go(to: absolutePosition);
+      timer = timerInitial;
+    }
+    timer -= dt;
+    super.update(dt);
+  }
 }

@@ -1,15 +1,22 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flame/game.dart';
+import 'package:flame/input.dart';
+import 'package:flame/palette.dart';
 import 'package:flame_bloc/flame_bloc.dart';
+import 'package:flutter/animation.dart';
 import 'package:watchsteroids/game/game.dart';
-import 'package:watchsteroids/game/game/ship.dart';
 
 class WatchsteroidsColors {
-  static const Color background = Color(0xFF080807);
-  static const Color ringColor = Color(0x05FFFFFF);
+  static const Color transparent = Color(0x00000000);
+  static const Color vignette = Color(0xFF000000);
+  static const Color background = Color(0xFF010101);
+  static const Color ringColor = Color(0x0BFF3535);
   static const Color ship = Color(0xFFFBE294);
+  static const Color shipShadow1 = Color(0xFFFB3324);
+  static const Color shipShadow2 = Color(0xFF0485AC);
 }
 
 class WatchsteroidsGame extends FlameGame {
@@ -21,19 +28,29 @@ class WatchsteroidsGame extends FlameGame {
 
   final GameCubit gameCubit;
 
+  late final CameraSubject cameraSubject;
+
   @override
   Future<void> onLoad() async {
     await add(
       FlameBlocProvider<GameCubit, GameState>.value(
         value: gameCubit,
         children: [
-          Ship(),
+          ShipContainer(),
         ],
       ),
     );
-    await add(Noise());
+
+    await add(AsteroidSpawner());
+
+    await add(NoiseAdd());
+    await add(NoiseOverlay());
+
+    await add(Vignette());
+    await add(cameraSubject = CameraSubject());
+
     camera
-      ..followVector2(Vector2.zero())
+      ..followComponent(cameraSubject)
       ..viewport = FixedResolutionViewport(Vector2(400, 400));
   }
 }
@@ -56,30 +73,30 @@ class Background extends PositionComponent with HasGameRef<WatchsteroidsGame> {
     size = gameRef.size;
 
     width = size.x;
+    //
+    // await add(
+    //   CircleComponent(
+    //     anchor: Anchor.center,
+    //     radius: width * 0.395,
+    //     paint: Paint()..color = WatchsteroidsColors.ringColor,
+    //   ),
+    // );
+    //
+    // await add(
+    //   CircleComponent(
+    //     anchor: Anchor.center,
+    //     radius: width * 0.295,
+    //     paint: Paint()..color = WatchsteroidsColors.ringColor,
+    //   ),
+    // );
 
-    await add(
-      CircleComponent(
-        anchor: Anchor.center,
-        radius: width * 0.395,
-        paint: Paint()..color = WatchsteroidsColors.ringColor,
-      ),
-    );
-
-    await add(
-      CircleComponent(
-        anchor: Anchor.center,
-        radius: width * 0.295,
-        paint: Paint()..color = WatchsteroidsColors.ringColor,
-      ),
-    );
-
-    await add(
-      CircleComponent(
-        anchor: Anchor.center,
-        radius: width * 0.1825,
-        paint: Paint()..color = WatchsteroidsColors.ringColor,
-      ),
-    );
+    // await add(
+    //   CircleComponent(
+    //     anchor: Anchor.center,
+    //     radius: width * 0.1825,
+    //     paint: Paint()..color = WatchsteroidsColors.ringColor,
+    //   ),
+    // );
   }
 
   @override
@@ -89,15 +106,56 @@ class Background extends PositionComponent with HasGameRef<WatchsteroidsGame> {
   }
 }
 
-class Noise extends SpriteComponent with HasGameRef<WatchsteroidsGame> {
-  Noise() : super(anchor: Anchor.center);
+class CameraSubject extends PositionComponent
+    with HasGameRef<WatchsteroidsGame> {
+  CameraSubject()
+      : super(
+          size: Vector2.all(10),
+          anchor: Anchor.center,
+        );
+
+  final effectController = CurvedEffectController(0.1, Curves.easeOutQuint)
+    ..setToEnd();
+
+  late final moveEffect = MoveCameraSubject(position, effectController);
 
   @override
   Future<void> onLoad() async {
-    size = Vector2(400, 400);
-    sprite = await gameRef.loadSprite('noise2.png');
+    await add(moveEffect);
   }
 
+  void go({required Vector2 to}) {
+    moveEffect.go(to: to);
+  }
+}
+
+class MoveCameraSubject extends Effect with EffectTarget<CameraSubject> {
+  MoveCameraSubject(this._to, super.controller);
+
   @override
-  late Paint paint = super.paint..blendMode = BlendMode.overlay;
+  void onMount() {
+    super.onMount();
+    _from = target.position;
+  }
+
+  Vector2 _to;
+  late Vector2 _from;
+
+  @override
+  bool get removeOnFinish => false;
+
+  @override
+  void apply(double progress) {
+    final delta = _to - _from;
+    final position = _from + delta * progress;
+    target.position = position;
+  }
+
+  void go({required Vector2 to}) {
+    reset();
+    _to = to;
+    _from = target.position;
+    final delta = _to - _from;
+    (controller as DurationEffectController).duration = 2;
+  }
 }

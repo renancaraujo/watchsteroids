@@ -9,9 +9,7 @@ class GameBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GameCubit, GameState>(
       builder: (context, state) {
-        return const RotaryInputController(
-          child: GameWrapper(),
-        );
+        return GameWrapper();
       },
     );
   }
@@ -42,8 +40,12 @@ class _GameWrapperState extends State<GameWrapper> {
             ),
             child: AspectRatio(
               aspectRatio: 1,
-              child: TouchInputController(
-                child: GameWidget(game: game),
+              child: RotaryInputController(
+                child: TouchInputController(
+                  child: GameWidget(
+                    game: game,
+                  ),
+                ),
               ),
             ),
           ),
