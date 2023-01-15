@@ -161,13 +161,26 @@ class Asteroid extends PositionComponent with HasGameRef<WatchsteroidsGame> {
 
   final Path path;
 
-  late int heath = random.nextInt(3) + 10;
+  late int heath = random.nextInt(3) + 1;
 
-  void takeHit() {
+  void takeHit(Set<Vector2> intersectionPoints, double angle) {
     heath--;
+
     if (heath <= 0) {
-      // gameRef.add(ExplosionEffect(position));
       removeFromParent();
+      gameRef.add(
+        AsteroidExplosion(
+          position: absolutePositionOfAnchor(Anchor.center),
+        ),
+      );
+    } else {
+      for (final intersectionPoint in intersectionPoints) {
+        gameRef.add(
+          AsteroidHit(
+            position: intersectionPoint,
+          ),
+        );
+      }
     }
   }
 
@@ -189,6 +202,8 @@ class Asteroid extends PositionComponent with HasGameRef<WatchsteroidsGame> {
 
 class AsteroidSprite extends SpriteComponent
     with HasGameRef<WatchsteroidsGame>, ParentIsA<Asteroid> {
+  AsteroidSprite({super.position}) : super(anchor: Anchor.center);
+
   @override
   Future<void> onLoad() async {
     sprite = await gameRef.loadSprite(

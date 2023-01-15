@@ -11,10 +11,7 @@ final random = math.Random();
 class Cannon extends Component
     with HasGameRef<WatchsteroidsGame>, ParentIsA<Ship> {
   Cannon() {
-    timer = Timer(
-      1,
-      onTick: onTick,
-    );
+    timer = Timer(1, onTick: onTick);
   }
 
   late Timer timer;
@@ -108,7 +105,10 @@ class ShotSprite extends SpriteComponent
     super.onCollisionStart(intersectionPoints, other);
     if (other is AsteroidSprite) {
       parent.removeFromParent();
-      other.parent.takeHit();
+      other.parent.takeHit(
+        intersectionPoints,
+        parent.angle,
+      );
     }
   }
 }

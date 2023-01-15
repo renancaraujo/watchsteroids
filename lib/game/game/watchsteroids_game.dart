@@ -73,12 +73,15 @@ class Background extends PositionComponent with HasGameRef<WatchsteroidsGame> {
     size = gameRef.size;
 
     width = size.x;
-    //
+
     // await add(
     //   CircleComponent(
     //     anchor: Anchor.center,
     //     radius: width * 0.395,
-    //     paint: Paint()..color = WatchsteroidsColors.ringColor,
+    //     paint: Paint()
+    //       ..color = WatchsteroidsColors.ringColor
+    //       ..style = PaintingStyle.stroke
+    //       ..strokeWidth = 4.0,
     //   ),
     // );
     //
@@ -86,15 +89,21 @@ class Background extends PositionComponent with HasGameRef<WatchsteroidsGame> {
     //   CircleComponent(
     //     anchor: Anchor.center,
     //     radius: width * 0.295,
-    //     paint: Paint()..color = WatchsteroidsColors.ringColor,
+    //     paint: Paint()
+    //       ..color = WatchsteroidsColors.ringColor
+    //       ..style = PaintingStyle.stroke
+    //       ..strokeWidth = 4.0,
     //   ),
     // );
-
+    //
     // await add(
     //   CircleComponent(
     //     anchor: Anchor.center,
     //     radius: width * 0.1825,
-    //     paint: Paint()..color = WatchsteroidsColors.ringColor,
+    //     paint: Paint()
+    //       ..color = WatchsteroidsColors.ringColor
+    //       ..style = PaintingStyle.stroke
+    //       ..strokeWidth = 4.0,
     //   ),
     // );
   }
@@ -114,8 +123,10 @@ class CameraSubject extends PositionComponent
           anchor: Anchor.center,
         );
 
-  final effectController = CurvedEffectController(0.1, Curves.easeOutQuint)
-    ..setToEnd();
+  final effectController = CurvedEffectController(
+    10.5,
+    ElasticOutCurve(10.0),
+  )..setToEnd();
 
   late final moveEffect = MoveCameraSubject(position, effectController);
 
