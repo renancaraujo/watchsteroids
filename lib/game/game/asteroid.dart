@@ -94,7 +94,7 @@ class AsteroidSpawner extends Component with HasGameRef<WatchsteroidsGame> {
     );
   }
 
-  static const interval = 4.0;
+  static const interval = 3.0;
 
   late Timer timer;
 
@@ -233,7 +233,7 @@ class AsteroidSprite extends SpriteComponent
       RotateEffect.by(
         pi * 2,
         InfiniteEffectController(
-          LinearEffectController(random.nextDouble() * 5 + 5),
+          LinearEffectController(random.nextDouble() * 5 + 4),
         ),
       ),
     );

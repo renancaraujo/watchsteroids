@@ -13,7 +13,7 @@ class WatchsteroidsColors {
   static const Color transparent = Color(0x00000000);
   static const Color vignette = Color(0xFF000000);
   static const Color background = Color(0xFF010101);
-  static const Color ringColor = Color(0x0BFF3535);
+  static const Color ringColor = Color(0xFFDB7900);
   static const Color ship = Color(0xFFFBE294);
   static const Color shipShadow1 = Color(0xFFFB3324);
   static const Color shipShadow2 = Color(0xFF0485AC);
@@ -22,16 +22,23 @@ class WatchsteroidsColors {
 class WatchsteroidsGame extends FlameGame with HasCollisionDetection {
   WatchsteroidsGame({
     required this.gameCubit,
-  }) {
-    add(Background());
-  }
+  });
 
   final GameCubit gameCubit;
 
   late final CameraSubject cameraSubject;
 
   @override
+  Color backgroundColor() {
+    return WatchsteroidsColors.background;
+  }
+
+  @override
   Future<void> onLoad() async {
+
+    await add(Radar());
+
+
     await add(
       FlameBlocProvider<GameCubit, GameState>.value(
         value: gameCubit,
@@ -40,6 +47,8 @@ class WatchsteroidsGame extends FlameGame with HasCollisionDetection {
         ],
       ),
     );
+
+
 
     await add(AsteroidSpawner());
 
@@ -52,66 +61,6 @@ class WatchsteroidsGame extends FlameGame with HasCollisionDetection {
     camera
       ..followComponent(cameraSubject)
       ..viewport = FixedResolutionViewport(Vector2(400, 400));
-  }
-}
-
-class Background extends PositionComponent with HasGameRef<WatchsteroidsGame> {
-  Background()
-      : super(
-          children: [
-            RectangleComponent(
-              anchor: Anchor.center,
-              position: Vector2(0, 0),
-              size: Vector2(500, 500),
-              paint: Paint()..color = WatchsteroidsColors.background,
-            ),
-          ],
-        );
-
-  @override
-  Future<void> onLoad() async {
-    size = gameRef.size;
-
-    width = size.x;
-
-    // await add(
-    //   CircleComponent(
-    //     anchor: Anchor.center,
-    //     radius: width * 0.395,
-    //     paint: Paint()
-    //       ..color = WatchsteroidsColors.ringColor
-    //       ..style = PaintingStyle.stroke
-    //       ..strokeWidth = 4.0,
-    //   ),
-    // );
-    //
-    // await add(
-    //   CircleComponent(
-    //     anchor: Anchor.center,
-    //     radius: width * 0.295,
-    //     paint: Paint()
-    //       ..color = WatchsteroidsColors.ringColor
-    //       ..style = PaintingStyle.stroke
-    //       ..strokeWidth = 4.0,
-    //   ),
-    // );
-    //
-    // await add(
-    //   CircleComponent(
-    //     anchor: Anchor.center,
-    //     radius: width * 0.1825,
-    //     paint: Paint()
-    //       ..color = WatchsteroidsColors.ringColor
-    //       ..style = PaintingStyle.stroke
-    //       ..strokeWidth = 4.0,
-    //   ),
-    // );
-  }
-
-  @override
-  void onGameResize(Vector2 size) {
-    super.onGameResize(size);
-    this.size = size.clone();
   }
 }
 
