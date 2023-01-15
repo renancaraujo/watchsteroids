@@ -25,11 +25,13 @@ class AsteroidHit extends PositionComponent with HasGameRef<WatchsteroidsGame> {
     );
 
     await out.add(OpacityEffect.fadeIn(controller));
-    await core.add(OpacityEffect.to(
-      0.5,
-      controller,
-      onComplete: removeFromParent,
-    ));
+    await core.add(
+      OpacityEffect.to(
+        0.5,
+        controller,
+        onComplete: removeFromParent,
+      ),
+    );
   }
 }
 
@@ -76,7 +78,6 @@ class AsteroidExplosion extends PositionComponent
 
   @override
   Future<void> onLoad() async {
-
     final backdrop = AsteroidExplosionBackdrop();
     await add(backdrop);
 
@@ -98,18 +99,20 @@ class AsteroidExplosion extends PositionComponent
       alternate: true,
     );
 
-    await backdrop.add(OpacityEffect.to(1.0, controller));
+    await backdrop.add(OpacityEffect.to(1, controller));
 
     await glare.add(OpacityEffect.to(0.6, controller));
     await glare.add(ScaleEffect.to(Vector2.all(1.5), controller));
 
     await outerCore.add(OpacityEffect.to(0.5, controller));
 
-    await core.add(OpacityEffect.to(
-      1.0,
-      controller,
-      onComplete: removeFromParent,
-    ));
+    await core.add(
+      OpacityEffect.to(
+        1,
+        controller,
+        onComplete: removeFromParent,
+      ),
+    );
   }
 }
 

@@ -57,7 +57,7 @@ class Vignette extends RectangleComponent with HasGameRef<WatchsteroidsGame> {
   @override
   Paint get paint => BasicPalette.white.paint()
     ..shader = Gradient.radial(
-      Offset(200, 200),
+      const Offset(200, 200),
       200,
       [WatchsteroidsColors.transparent, const Color(0xFF000000)],
       [0.45, 1.0],

@@ -16,8 +16,11 @@ class GamePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GameCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<GameCubit>(create: (_) => GameCubit()),
+        BlocProvider<RotationCubit>(create: (context) => RotationCubit()),
+      ],
       child: const Scaffold(
         body: GameView(),
       ),

@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
-import 'package:flame/rendering.dart';
 import 'package:watchsteroids/game/game.dart';
 
 enum AsteroidSpawnArea {
@@ -110,7 +109,6 @@ class AsteroidSpawner extends Component with HasGameRef<WatchsteroidsGame> {
     // gameRef.add(ProtoRenderPath(path));
   }
 
-  /// Randomly generates elliptical paths that passes though the center of the screen
   Path generateAsteroidPath() {
     final path = Path();
     final random = Random();

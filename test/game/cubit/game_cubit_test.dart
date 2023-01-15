@@ -8,14 +8,14 @@ void main() {
     group('constructor', () {
       test('can be instantiated', () {
         expect(
-          GameCubit(),
+          RotationCubit(),
           isNotNull,
         );
       });
     });
 
     test('initial state has default value for customProperty', () {
-      final gameCubit = GameCubit();
+      final gameCubit = RotationCubit();
       expect(gameCubit.state.shipAngle, equals(0));
     });
   });

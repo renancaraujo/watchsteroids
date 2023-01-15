@@ -9,7 +9,7 @@ import 'package:watchsteroids/game/game.dart';
 
 class ShipContainer extends PositionComponent
     with
-        FlameBlocListenable<GameCubit, GameState>,
+        FlameBlocListenable<RotationCubit, RotationState>,
         HasGameRef<WatchsteroidsGame> {
   ShipContainer()
       : super(
@@ -28,11 +28,11 @@ class ShipContainer extends PositionComponent
       ..strokeJoin = StrokeJoin.miter
       ..strokeMiterLimit = 90
       ..shader = Gradient.radial(
-        Offset(20, 0),
+        const Offset(20, 0),
         40,
         [
           WatchsteroidsColors.ship,
-          Color(0xA6FBE294),
+          const Color(0xA6FBE294),
         ],
       ),
   );
@@ -82,7 +82,7 @@ class ShipContainer extends PositionComponent
   }
 
   @override
-  void onNewState(GameState state) {
+  void onNewState(RotationState state) {
     final from = ship.angle;
     final to = state.shipAngle;
 
@@ -112,7 +112,7 @@ class Ship extends PositionComponent
   final effectController = CurvedEffectController(0.1, Curves.easeOutQuint)
     ..setToEnd();
 
-  late final rotateShipEffect = RotateShipEffect(0.0, effectController);
+  late final rotateShipEffect = RotateShipEffect(0, effectController);
 
   final Paint paint;
 
@@ -187,7 +187,7 @@ class CameraSpot extends PositionComponent with HasGameRef<WatchsteroidsGame> {
 
   final timerInitial = 0.1;
 
-  late var timer = timerInitial;
+  late double timer = timerInitial;
 
   @override
   void update(double dt) {

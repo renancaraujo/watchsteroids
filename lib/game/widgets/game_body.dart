@@ -1,5 +1,6 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:nested/nested.dart';
 import 'package:watchsteroids/game/game.dart';
 
 class GameBody extends StatelessWidget {
@@ -9,7 +10,7 @@ class GameBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GameCubit, GameState>(
       builder: (context, state) {
-        return GameWrapper();
+        return const GameWrapper();
       },
     );
   }
@@ -23,9 +24,12 @@ class GameWrapper extends StatefulWidget {
 }
 
 class _GameWrapperState extends State<GameWrapper> {
-  late final gameCubit = context.read<GameCubit>();
+  late final rotationCubit = context.read<RotationCubit>();
+  late final gameCube = context.read<GameCubit>();
 
-  late final game = WatchsteroidsGame(gameCubit: gameCubit);
+  late final game = WatchsteroidsGame(
+    rotationCubit: rotationCubit,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +44,12 @@ class _GameWrapperState extends State<GameWrapper> {
             ),
             child: AspectRatio(
               aspectRatio: 1,
-              child: RotaryInputController(
-                child: TouchInputController(
-                  child: GameWidget(
-                    game: game,
-                  ),
-                ),
+              child: Nested(
+                children: const [
+                  TouchInputController(),
+                  RotaryInputController(),
+                ],
+                child: GameWidget(game: game),
               ),
             ),
           ),

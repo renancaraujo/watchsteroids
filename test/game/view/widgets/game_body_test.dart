@@ -9,7 +9,7 @@ void main() {
     testWidgets('renders Text', (tester) async {
       await tester.pumpWidget(
         BlocProvider(
-          create: (context) => GameCubit(),
+          create: (context) => RotationCubit(),
           child: MaterialApp(home: GameBody()),
         ),
       );

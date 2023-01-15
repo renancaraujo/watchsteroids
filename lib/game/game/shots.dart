@@ -16,7 +16,6 @@ class Cannon extends Component
 
   late Timer timer;
 
-  @override
   void onTick() {
     final shotPosition = parent.absolutePositionOfAnchor(Anchor.topCenter);
     final nextPeriod = random.nextDouble() * 0.2 + 0.2;

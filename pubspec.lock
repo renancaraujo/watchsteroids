@@ -141,10 +141,10 @@ packages:
     dependency: "direct main"
     description:
       name: flame
-      sha256: "24ce7b69bddc4f23aebdd9317fc24f08c37d4b42239baa00a34b768b6de9af85"
+      sha256: "0c55f8d704f09536125c811a19d9aab7407dce245b2bfb507e84296c1c996202"
       url: "https://pub.dev"
     source: hosted
-    version: "1.5.0"
+    version: "1.6.0"
   flame_bloc:
     dependency: "direct main"
     description:
@@ -297,7 +297,7 @@ packages:
     source: hosted
     version: "0.3.0"
   nested:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: nested
       sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"

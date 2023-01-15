@@ -1,23 +1,22 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:nested/nested.dart';
 import 'package:watchsteroids/game/game.dart';
 
-class TouchInputController extends StatelessWidget {
+class TouchInputController extends SingleChildStatelessWidget {
   const TouchInputController({
     super.key,
-    required this.child,
+    super.child,
   });
 
-  final Widget child;
-
   @override
-  Widget build(BuildContext context) {
+  Widget buildWithChild(BuildContext context, Widget? child) {
     return LayoutBuilder(
       builder: (context, constraints) {
         return _TouchInputControllerInner(
           constraints: constraints,
-          child: child,
+          child: child!,
         );
       },
     );
@@ -41,7 +40,7 @@ class _TouchInputControllerInner extends StatefulWidget {
 
 class _TouchInputControllerInnerState
     extends State<_TouchInputControllerInner> {
-  late final gameCubit = context.read<GameCubit>();
+  late final gameCubit = context.read<RotationCubit>();
 
   Size get size => widget.constraints.biggest;
 

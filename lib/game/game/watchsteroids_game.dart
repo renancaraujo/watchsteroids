@@ -1,10 +1,6 @@
-import 'dart:ui';
-
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/game.dart';
-import 'package:flame/input.dart';
-import 'package:flame/palette.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/animation.dart';
 import 'package:watchsteroids/game/game.dart';
@@ -21,10 +17,10 @@ class WatchsteroidsColors {
 
 class WatchsteroidsGame extends FlameGame with HasCollisionDetection {
   WatchsteroidsGame({
-    required this.gameCubit,
+    required this.rotationCubit,
   });
 
-  final GameCubit gameCubit;
+  final RotationCubit rotationCubit;
 
   late final CameraSubject cameraSubject;
 
@@ -35,20 +31,16 @@ class WatchsteroidsGame extends FlameGame with HasCollisionDetection {
 
   @override
   Future<void> onLoad() async {
-
     await add(Radar());
 
-
     await add(
-      FlameBlocProvider<GameCubit, GameState>.value(
-        value: gameCubit,
+      FlameBlocProvider<RotationCubit, RotationState>.value(
+        value: rotationCubit,
         children: [
           ShipContainer(),
         ],
       ),
     );
-
-
 
     await add(AsteroidSpawner());
 
@@ -74,7 +66,7 @@ class CameraSubject extends PositionComponent
 
   final effectController = CurvedEffectController(
     10.5,
-    ElasticOutCurve(10.0),
+    const ElasticOutCurve(10),
   )..setToEnd();
 
   late final moveEffect = MoveCameraSubject(position, effectController);
@@ -115,7 +107,6 @@ class MoveCameraSubject extends Effect with EffectTarget<CameraSubject> {
     reset();
     _to = to;
     _from = target.position;
-    final delta = _to - _from;
     (controller as DurationEffectController).duration = 2;
   }
 }

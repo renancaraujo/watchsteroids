@@ -4,10 +4,6 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
-import 'package:flame/game.dart';
-import 'package:flame/input.dart';
-import 'package:flame/palette.dart';
-import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/animation.dart';
 import 'package:watchsteroids/game/game.dart';
 
@@ -18,7 +14,6 @@ class Radar extends PositionComponent with HasGameRef<WatchsteroidsGame> {
 
   @override
   Future<void> onLoad() async {
-    // size = Vector2(400, 400);
     position = Vector2(0, 0);
 
     await add(
@@ -46,12 +41,12 @@ class Radar extends PositionComponent with HasGameRef<WatchsteroidsGame> {
           paint: Paint()
             ..strokeWidth = 4.0
             ..shader = Gradient.radial(
-              Offset(alertSize, 0),
+              const Offset(alertSize, 0),
               alertSize,
               [
                 WatchsteroidsColors.ringColor.withOpacity(0.4),
                 WatchsteroidsColors.ringColor.withOpacity(0.2),
-                WatchsteroidsColors.ringColor.withOpacity(0.0),
+                WatchsteroidsColors.ringColor.withOpacity(0),
               ],
               [0.0, 0.3, 1.0],
             ),
@@ -71,7 +66,11 @@ class Radar extends PositionComponent with HasGameRef<WatchsteroidsGame> {
       );
 
       alert.add(
-          SequenceEffect([OpacityEffect.to(1.0, controller), RemoveEffect()]));
+        SequenceEffect([
+          OpacityEffect.to(1, controller),
+          RemoveEffect(),
+        ]),
+      );
     }
   }
 }
@@ -81,11 +80,13 @@ class RadarDetector extends CircleComponent with CollisionCallbacks {
     required this.onCollisionStartCallback,
     super.radius,
   }) : super(
-            anchor: Anchor.center,
-            paint: Paint()..color = WatchsteroidsColors.transparent,
-            children: [
-              CircleHitbox(),
-            ]);
+          anchor: Anchor.center,
+          paint: Paint()..color = WatchsteroidsColors.transparent,
+          children: [
+            CircleHitbox(),
+          ],
+        );
 
+  @override
   final CollisionCallback<PositionComponent> onCollisionStartCallback;
 }
