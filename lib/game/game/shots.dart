@@ -3,40 +3,64 @@ import 'dart:math' as math;
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
+import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/animation.dart';
 import 'package:watchsteroids/game/game.dart';
 
 final random = math.Random();
 
 class Cannon extends Component
-    with HasGameRef<WatchsteroidsGame>, ParentIsA<Ship> {
+    with
+        HasGameRef<WatchsteroidsGame>,
+        ParentIsA<Ship>,
+        FlameBlocListenable<GameCubit, GameState> {
   Cannon() {
-    timer = Timer(1, onTick: onTick);
+    timer = initialTimer;
   }
+
+  static const interval = 0.2;
+
+  Timer get initialTimer => Timer(1, onTick: onTick);
 
   late Timer timer;
 
   void onTick() {
     final shotPosition = parent.absolutePositionOfAnchor(Anchor.topCenter);
-    final nextPeriod = random.nextDouble() * 0.2 + 0.2;
+    final nextPeriod = random.nextDouble() * 0.2 + interval;
     timer = Timer(
       nextPeriod,
       onTick: onTick,
     );
 
-    if (parent.canShoot || true) {
-      gameRef.add(
+    // if (parent.canShoot) {}
+      gameRef.flameMultiBlocProvider.add(
         Shot(
-          angle: parent.angle,
-          position: shotPosition,
-        ),
-      );
-    }
+        angle: parent.angle,
+        position: shotPosition,
+      ),
+    );
   }
 
   @override
   void update(double dt) {
+    if (!bloc.isPlaying) {
+      return;
+    }
     timer.update(dt);
+  }
+
+  @override
+  void onNewState(GameState state) {
+    switch (state) {
+      case GameState.playing:
+        timer = initialTimer;
+        timer.start();
+        break;
+      case GameState.initial:
+      case GameState.gameOver:
+        timer.stop();
+        break;
+    }
   }
 }
 

@@ -33,7 +33,7 @@ class _RotaryInputControllerInner extends StatefulWidget {
 class _RotaryInputControllerState extends State<_RotaryInputControllerInner> {
   late final StreamSubscription<RotaryEvent> rotarySubscription;
 
-  late final gameCubit = context.read<RotationCubit>();
+  late final rotationCubit = context.read<RotationCubit>();
 
   @override
   void initState() {
@@ -48,12 +48,12 @@ class _RotaryInputControllerState extends State<_RotaryInputControllerInner> {
       }
 
       if (event.magnitude == 136.0) {
-        gameCubit.rotateBy(1.72 * factor * (math.pi / 12));
+        rotationCubit.rotateBy(1.72 * factor * (math.pi / 12));
       } else {
         final maxmag = math.max(event.magnitude ?? 10, 10);
         final magn = (math.pi / 12) * (maxmag / 136);
 
-        gameCubit.rotateBy(factor * magn);
+        rotationCubit.rotateBy(factor * magn);
       }
     });
   }

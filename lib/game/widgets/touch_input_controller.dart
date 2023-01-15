@@ -40,7 +40,8 @@ class _TouchInputControllerInner extends StatefulWidget {
 
 class _TouchInputControllerInnerState
     extends State<_TouchInputControllerInner> {
-  late final gameCubit = context.read<RotationCubit>();
+  late final rotationCubit = context.read<RotationCubit>();
+  late final gameCubit = context.read<GameCubit>();
 
   Size get size => widget.constraints.biggest;
 
@@ -50,6 +51,10 @@ class _TouchInputControllerInnerState
   double startShipAngle = 0;
 
   void handlePanStart(DragStartDetails details) {
+    if (!gameCubit.isPlaying) {
+      return;
+    }
+
     final offsetToCenter = details.localPosition - size.center(Offset.zero);
     final distanceToCenter = offsetToCenter.distance;
 
@@ -58,7 +63,7 @@ class _TouchInputControllerInnerState
     }
 
     previousAngle = offsetToCenter.direction;
-    startShipAngle = gameCubit.state.shipAngle;
+    startShipAngle = rotationCubit.state.shipAngle;
     setState(() {
       isDragging = true;
     });
@@ -70,14 +75,7 @@ class _TouchInputControllerInnerState
     }
 
     final offsetToCenter = details.localPosition - size.center(Offset.zero);
-    final distanceToCenter = offsetToCenter.distance;
 
-    if (distanceToCenter < size.width * 0.1) {
-      setState(() {
-        isDragging = false;
-      });
-      return;
-    }
 
     final currentAngle = offsetToCenter.direction;
 
@@ -92,7 +90,7 @@ class _TouchInputControllerInnerState
 
     previousAngle = currentAngle;
 
-    gameCubit.rotateBy(angleDelta);
+    rotationCubit.rotateBy(angleDelta);
   }
 
   void handlePanEnd(DragEndDetails details) {

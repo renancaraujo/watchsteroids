@@ -18,9 +18,11 @@ class WatchsteroidsColors {
 class WatchsteroidsGame extends FlameGame with HasCollisionDetection {
   WatchsteroidsGame({
     required this.rotationCubit,
+    required this.gameCubit,
   });
 
   final RotationCubit rotationCubit;
+  final GameCubit gameCubit;
 
   late final CameraSubject cameraSubject;
 
@@ -29,20 +31,32 @@ class WatchsteroidsGame extends FlameGame with HasCollisionDetection {
     return WatchsteroidsColors.background;
   }
 
+  late FlameMultiBlocProvider flameMultiBlocProvider;
+
   @override
   Future<void> onLoad() async {
     await add(Radar());
 
     await add(
-      FlameBlocProvider<RotationCubit, RotationState>.value(
-        value: rotationCubit,
+      flameMultiBlocProvider = FlameMultiBlocProvider(
+        providers: [
+          FlameBlocProvider<RotationCubit, RotationState>.value(
+            value: rotationCubit,
+          ),
+          FlameBlocProvider<GameCubit, GameState>.value(
+            value: gameCubit,
+          ),
+        ],
         children: [
-          ShipContainer(),
+          GameStateSyncController(),
+          LogoInitial(),
+          ShipContainer(
+            gameCubit,
+          ),
+          AsteroidSpawner(),
         ],
       ),
     );
-
-    await add(AsteroidSpawner());
 
     await add(NoiseAdd());
     await add(NoiseOverlay());
@@ -66,7 +80,7 @@ class CameraSubject extends PositionComponent
 
   final effectController = CurvedEffectController(
     10.5,
-    const ElasticOutCurve(10),
+   Curves.elasticOut,
   )..setToEnd();
 
   late final moveEffect = MoveCameraSubject(position, effectController);
@@ -76,7 +90,8 @@ class CameraSubject extends PositionComponent
     await add(moveEffect);
   }
 
-  void go({required Vector2 to}) {
+  void go({required Vector2 to, bool calm = false}) {
+    (effectController as DurationEffectController)..duration = calm ? 30 : 10.5;
     moveEffect.go(to: to);
   }
 }
@@ -108,5 +123,76 @@ class MoveCameraSubject extends Effect with EffectTarget<CameraSubject> {
     _to = to;
     _from = target.position;
     (controller as DurationEffectController).duration = 2;
+  }
+}
+
+class LogoInitial extends SpriteComponent
+    with
+        HasGameRef<WatchsteroidsGame>,
+        FlameBlocListenable<GameCubit, GameState> {
+  LogoInitial()
+      : super(
+          anchor: Anchor.center,
+          priority: 4,
+        );
+
+  @override
+  Future<void> onLoad() async {
+    sprite = await gameRef.loadSprite(
+      'logoinitial.png',
+      srcSize: Vector2(298, 319),
+    );
+
+    size = Vector2(298, 319);
+  }
+
+  late final effectController = EffectController(
+    duration: 1,
+  );
+
+  @override
+  void onNewState(GameState state) {
+    switch (state) {
+      case GameState.initial:
+        add(
+          OpacityEffect.to(1, effectController),
+        );
+        break;
+      case GameState.playing:
+      case GameState.gameOver:
+        add(
+          OpacityEffect.to(0, effectController),
+        );
+        break;
+    }
+  }
+}
+
+class GameStateSyncController extends Component
+    with
+        HasGameRef<WatchsteroidsGame>,
+        FlameBlocListenable<GameCubit, GameState> {
+  GameStateSyncController();
+
+  @override
+  void onNewState(GameState state) {
+    switch (state) {
+      case GameState.initial:
+        gameRef.overlays.clear();
+        gameRef.overlays.add('initial');
+        gameRef.cameraSubject.go(
+          to: Vector2(0, 0),
+          calm: true,
+        );
+        gameRef.rotationCubit.rotateTo(0);
+        break;
+      case GameState.playing:
+        gameRef.overlays.clear();
+        break;
+      case GameState.gameOver:
+        gameRef.overlays.clear();
+        gameRef.overlays.add('gameOver');
+        break;
+    }
   }
 }

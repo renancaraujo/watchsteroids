@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame_bloc/flame_bloc.dart';
@@ -11,11 +12,14 @@ class ShipContainer extends PositionComponent
     with
         FlameBlocListenable<RotationCubit, RotationState>,
         HasGameRef<WatchsteroidsGame> {
-  ShipContainer()
+  ShipContainer(this.gameCubit)
       : super(
           anchor: Anchor.center,
           position: Vector2.zero(),
+          priority: 5,
         );
+
+  final GameCubit gameCubit;
 
   late final side = 40.0;
 
@@ -73,11 +77,21 @@ class ShipContainer extends PositionComponent
     await add(ship);
 
     await ship.add(ShipGlow());
-
     await ship.add(Cannon());
+    await ship.add(
+      PolygonHitbox(
+        isSolid: true,
+        [
+          Vector2(side / 2, 0),
+          Vector2(side, side),
+          Vector2(side / 2, side * 0.7),
+          Vector2(0, side),
+        ],
+      ),
+    );
 
     await ship.add(
-      CameraSpot()..position = Vector2(side / 2, side / 2 - 40),
+      CameraSpot(gameCubit)..position = Vector2(side / 2, side / 2 - 40),
     );
   }
 
@@ -97,10 +111,21 @@ class ShipContainer extends PositionComponent
     shadow2.effectController.duration = ship.effectController.duration * 2;
     shadow2.go(to: state.shipAngle);
   }
+
+  void hitAsteroid(Set<Vector2> intersectionPoints) {
+    gameCubit.gameOver();
+    gameRef.flameMultiBlocProvider.add(
+      AsteroidExplosion(position: absolutePositionOfAnchor(Anchor.center)),
+    );
+    gameRef.cameraSubject.go(to: intersectionPoints.first, calm: true);
+  }
 }
 
 class Ship extends PositionComponent
-    with HasGameRef<WatchsteroidsGame>, ParentIsA<ShipContainer> {
+    with
+        HasGameRef<WatchsteroidsGame>,
+        ParentIsA<ShipContainer>,
+        CollisionCallbacks {
   Ship(this.paint) : super(anchor: Anchor.center);
 
   @override
@@ -132,6 +157,18 @@ class Ship extends PositionComponent
     super.render(canvas);
 
     canvas.drawPath(parent.path, paint);
+  }
+
+  @override
+  void onCollisionStart(
+    Set<Vector2> intersectionPoints,
+    PositionComponent other,
+  ) {
+    super.onCollisionStart(intersectionPoints, other);
+
+    if (other is AsteroidSprite) {
+      parent.hitAsteroid(intersectionPoints);
+    }
   }
 }
 
@@ -165,37 +202,65 @@ class RotateShipEffect extends Effect with EffectTarget<PositionComponent> {
 }
 
 class ShipGlow extends SpriteComponent
-    with HasGameRef<WatchsteroidsGame>, ParentIsA<PositionComponent> {
+    with
+        HasGameRef<WatchsteroidsGame>,
+        ParentIsA<Ship>,
+        FlameBlocListenable<GameCubit, GameState> {
   ShipGlow() : super(anchor: Anchor.center);
 
   @override
   Future<void> onLoad() async {
     size = Vector2(270, 270) * 1.5;
     position = parent.size / 2;
-    position.y -= 20;
+    opacity = 0.0;
+
     sprite = await gameRef.loadSprite('shipglow.png');
 
     angle = math.pi;
   }
+
+  @override
+  void onNewState(GameState state) {
+    switch (state) {
+      case GameState.playing:
+        position.y = (parent.y / 2) - 20;
+        opacity = 1.0;
+        break;
+      case GameState.initial:
+        parent.parent.ship.angle = 0;
+        parent.parent.shadow.angle = 0;
+        parent.parent.shadow2.angle = 0;
+        opacity = 0.0;
+        break;
+      case GameState.gameOver:
+        position.y = parent.y / 2;
+
+        break;
+    }
+  }
 }
 
 class CameraSpot extends PositionComponent with HasGameRef<WatchsteroidsGame> {
-  CameraSpot()
+  CameraSpot(this.gameCubit)
       : super(
           anchor: Anchor.center,
         );
 
   final timerInitial = 0.1;
+  final GameCubit gameCubit;
 
   late double timer = timerInitial;
 
   @override
   void update(double dt) {
+    if (!gameCubit.isPlaying) {
+      return;
+    }
+
     if (timer <= 0) {
       gameRef.cameraSubject.go(to: absolutePosition);
       timer = timerInitial;
     }
     timer -= dt;
-    super.update(dt);
   }
 }

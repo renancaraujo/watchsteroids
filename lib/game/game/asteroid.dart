@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
+import 'package:flame_bloc/flame_bloc.dart';
 import 'package:watchsteroids/game/game.dart';
 
 enum AsteroidSpawnArea {
@@ -85,17 +86,23 @@ enum AsteroidSpawnArea {
   Vector2 get origin => Vector2(originX, originY);
 }
 
-class AsteroidSpawner extends Component with HasGameRef<WatchsteroidsGame> {
+class AsteroidSpawner extends Component
+    with
+        HasGameRef<WatchsteroidsGame>,
+        FlameBlocListenable<GameCubit, GameState> {
   AsteroidSpawner() {
-    timer = Timer(
-      interval,
-      onTick: onTick,
-    );
+    timer = initialTimer;
   }
 
   static const interval = 3.0;
 
   late Timer timer;
+
+  Timer get initialTimer => Timer(
+        interval,
+        onTick: onTick,
+        autoStart: false,
+      );
 
   void onTick() {
     final nextPeriod = random.nextDouble() * 0.5 + interval;
@@ -105,7 +112,7 @@ class AsteroidSpawner extends Component with HasGameRef<WatchsteroidsGame> {
     );
 
     final path = generateAsteroidPath();
-    gameRef.add(Asteroid(path));
+    gameRef.flameMultiBlocProvider.add(Asteroid(path));
     // gameRef.add(ProtoRenderPath(path));
   }
 
@@ -145,11 +152,31 @@ class AsteroidSpawner extends Component with HasGameRef<WatchsteroidsGame> {
 
   @override
   void update(double dt) {
+    if (!bloc.isPlaying) {
+      return;
+    }
     timer.update(dt);
+  }
+
+  @override
+  void onNewState(GameState state) {
+    switch (state) {
+      case GameState.playing:
+        timer = initialTimer;
+        timer.start();
+        break;
+      case GameState.initial:
+      case GameState.gameOver:
+        timer.stop();
+        break;
+    }
   }
 }
 
-class Asteroid extends PositionComponent with HasGameRef<WatchsteroidsGame> {
+class Asteroid extends PositionComponent
+    with
+        HasGameRef<WatchsteroidsGame>,
+        FlameBlocListenable<GameCubit, GameState> {
   Asteroid(this.path)
       : super(
           position: Vector2(0, 0),
@@ -166,14 +193,12 @@ class Asteroid extends PositionComponent with HasGameRef<WatchsteroidsGame> {
 
     if (heath <= 0) {
       removeFromParent();
-      gameRef.add(
-        AsteroidExplosion(
-          position: absolutePositionOfAnchor(Anchor.center),
-        ),
+      gameRef.flameMultiBlocProvider.add(
+        AsteroidExplosion(position: absolutePositionOfAnchor(Anchor.center)),
       );
     } else {
       for (final intersectionPoint in intersectionPoints) {
-        gameRef.add(
+        gameRef.flameMultiBlocProvider.add(
           AsteroidHit(
             position: intersectionPoint,
           ),
@@ -182,19 +207,45 @@ class Asteroid extends PositionComponent with HasGameRef<WatchsteroidsGame> {
     }
   }
 
+  RotateEffect? rotateEffect;
+  MoveAlongPathEffect? moveAlongPathEffect;
+
   @override
   Future<void> onLoad() async {
     await add(AsteroidSprite());
 
     await add(
-      MoveAlongPathEffect(
+      rotateEffect = RotateEffect.by(
+        pi * 2,
+        InfiniteEffectController(
+          LinearEffectController(random.nextDouble() * 5 + 4),
+        ),
+      ),
+    );
+
+    await add(
+      moveAlongPathEffect = MoveAlongPathEffect(
         path,
         LinearEffectController(random.nextDouble() * 10 + 12),
         onComplete: () {
-          gameRef.remove(this);
+          gameRef.flameMultiBlocProvider.remove(this);
         },
       ),
     );
+  }
+
+  @override
+  void onNewState(GameState state) {
+    switch (state) {
+      case GameState.initial:
+      case GameState.playing:
+        removeFromParent();
+        break;
+      case GameState.gameOver:
+        rotateEffect?.pause();
+        moveAlongPathEffect?.pause();
+        break;
+    }
   }
 }
 
@@ -224,15 +275,6 @@ class AsteroidSprite extends SpriteComponent
           Vector2(10.3, 12.3),
         ],
         isSolid: true,
-      ),
-    );
-
-    await add(
-      RotateEffect.by(
-        pi * 2,
-        InfiniteEffectController(
-          LinearEffectController(random.nextDouble() * 5 + 4),
-        ),
       ),
     );
   }

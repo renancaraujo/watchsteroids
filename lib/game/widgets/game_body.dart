@@ -25,10 +25,11 @@ class GameWrapper extends StatefulWidget {
 
 class _GameWrapperState extends State<GameWrapper> {
   late final rotationCubit = context.read<RotationCubit>();
-  late final gameCube = context.read<GameCubit>();
+  late final gameCubit = context.read<GameCubit>();
 
   late final game = WatchsteroidsGame(
     rotationCubit: rotationCubit,
+    gameCubit: gameCubit,
   );
 
   @override
@@ -49,7 +50,18 @@ class _GameWrapperState extends State<GameWrapper> {
                   TouchInputController(),
                   RotaryInputController(),
                 ],
-                child: GameWidget(game: game),
+                child: GameWidget(
+                  game: game,
+                  initialActiveOverlays: const ['initial'],
+                  overlayBuilderMap: {
+                    'initial': (context, game) {
+                      return const InitialOverlay();
+                    },
+                    'gameOver': (context, game) {
+                      return const GameOverOverlay();
+                    },
+                  },
+                ),
               ),
             ),
           ),
