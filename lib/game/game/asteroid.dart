@@ -1,32 +1,11 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/rendering.dart';
 import 'package:watchsteroids/game/game.dart';
-
-// class ProtoAsteroid extends RectangleComponent {
-//   ProtoAsteroid()
-//       : super(
-//           size: Vector2(100, 49),
-//           angle: pi / 4,
-//           paint: Paint()
-//
-//             ..shader = Gradient.linear(
-//               Offset.zero,
-//               Offset(50, 50),
-//               [
-//                 Color(0xFF000000),
-//                 Color(0xFFF4F2E9),
-//
-//               ],
-//             )
-//             ..blendMode = BlendMode.softLight,
-//           position: Vector2(40, -180),
-//           priority: 90,
-//         );
-// }
 
 enum AsteroidSpawnArea {
   northWest(-470, -470),
@@ -127,7 +106,7 @@ class AsteroidSpawner extends Component with HasGameRef<WatchsteroidsGame> {
     );
 
     final path = generateAsteroidPath();
-    gameRef.add(AsteroidSprite(path));
+    gameRef.add(Asteroid(path));
     // gameRef.add(ProtoRenderPath(path));
   }
 
@@ -172,33 +151,29 @@ class AsteroidSpawner extends Component with HasGameRef<WatchsteroidsGame> {
   }
 }
 
-class AsteroidSprite extends SpriteComponent
-    with HasGameRef<WatchsteroidsGame> {
-  AsteroidSprite(this.path)
+class Asteroid extends PositionComponent with HasGameRef<WatchsteroidsGame> {
+  Asteroid(this.path)
       : super(
-          position: Vector2(40, -10),
+          position: Vector2(0, 0),
           priority: 90,
           anchor: Anchor.center,
         );
 
   final Path path;
 
+  late int heath = random.nextInt(3) + 10;
+
+  void takeHit() {
+    heath--;
+    if (heath <= 0) {
+      // gameRef.add(ExplosionEffect(position));
+      removeFromParent();
+    }
+  }
+
   @override
   Future<void> onLoad() async {
-    sprite = await gameRef.loadSprite(
-      'protoasteroid2.png',
-      srcSize: Vector2(57, 68),
-    );
-    size = Vector2(57, 68);
-
-    await add(
-      RotateEffect.by(
-        pi * 2,
-        InfiniteEffectController(
-          LinearEffectController(random.nextDouble() * 5 + 5),
-        ),
-      ),
-    );
+    await add(AsteroidSprite());
 
     await add(
       MoveAlongPathEffect(
@@ -207,6 +182,44 @@ class AsteroidSprite extends SpriteComponent
         onComplete: () {
           gameRef.remove(this);
         },
+      ),
+    );
+  }
+}
+
+class AsteroidSprite extends SpriteComponent
+    with HasGameRef<WatchsteroidsGame>, ParentIsA<Asteroid> {
+  @override
+  Future<void> onLoad() async {
+    sprite = await gameRef.loadSprite(
+      'protoasteroid2.png',
+      srcSize: Vector2(57, 68),
+    );
+    size = Vector2(57, 68);
+
+    position = Vector2.zero();
+
+    await add(
+      PolygonHitbox(
+        [
+          Vector2(26.5, 0),
+          Vector2(38.5, 20.5),
+          Vector2(55.9, 27),
+          Vector2(38.1, 57.4),
+          Vector2(13.7, 67.9),
+          Vector2(0, 31.9),
+          Vector2(10.3, 12.3),
+        ],
+        isSolid: true,
+      ),
+    );
+
+    await add(
+      RotateEffect.by(
+        pi * 2,
+        InfiniteEffectController(
+          LinearEffectController(random.nextDouble() * 5 + 5),
+        ),
       ),
     );
   }

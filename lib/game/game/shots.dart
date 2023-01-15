@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/animation.dart';
@@ -69,14 +70,15 @@ class Shot extends PositionComponent {
     await add(
       MoveToEffect(
         destinationAngle,
-        LinearEffectController(0.75 + (random.nextDouble() * 0.5)),
+        LinearEffectController(0.75 + (random.nextDouble() * 0.1)),
         onComplete: removeFromParent,
       ),
     );
   }
 }
 
-class ShotSprite extends SpriteComponent with HasGameRef<WatchsteroidsGame> {
+class ShotSprite extends SpriteComponent
+    with HasGameRef<WatchsteroidsGame>, CollisionCallbacks, ParentIsA<Shot> {
   ShotSprite() : super(anchor: Anchor.center);
 
   @override
@@ -88,15 +90,31 @@ class ShotSprite extends SpriteComponent with HasGameRef<WatchsteroidsGame> {
       srcPosition: Vector2(shotSprite * 3, 0),
     );
     size = Vector2(3, 60);
+
+    await add(
+      RectangleHitbox(
+        size: Vector2(3, 40),
+        anchor: Anchor.center,
+        position: size / 2,
+      ),
+    );
+  }
+
+  @override
+  void onCollisionStart(
+    Set<Vector2> intersectionPoints,
+    PositionComponent other,
+  ) {
+    super.onCollisionStart(intersectionPoints, other);
+    if (other is AsteroidSprite) {
+      parent.removeFromParent();
+      other.parent.takeHit();
+    }
   }
 }
 
 class ShotGlow extends SpriteComponent with HasGameRef<WatchsteroidsGame> {
   ShotGlow() : super(anchor: Anchor.center);
-
-  @override
-  // TODO: implement debugMode
-  // bool get debugMode => true;
 
   @override
   Future<void> onLoad() async {

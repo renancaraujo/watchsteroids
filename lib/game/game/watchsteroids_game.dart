@@ -19,7 +19,7 @@ class WatchsteroidsColors {
   static const Color shipShadow2 = Color(0xFF0485AC);
 }
 
-class WatchsteroidsGame extends FlameGame {
+class WatchsteroidsGame extends FlameGame with HasCollisionDetection {
   WatchsteroidsGame({
     required this.gameCubit,
   }) {
