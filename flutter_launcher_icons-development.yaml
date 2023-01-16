@@ -1,0 +1,6 @@
+
+flutter_icons:
+  android: true
+  image_path: "stuff/512.png"
+  adaptive_icon_background: "#010101"
+  adaptive_icon_foreground:  "stuff/512tr.png"

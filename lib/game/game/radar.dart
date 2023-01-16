@@ -5,12 +5,28 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/animation.dart';
+import 'package:watchsteroids/app/app.dart';
 import 'package:watchsteroids/game/game.dart';
 
 class Radar extends PositionComponent with HasGameRef<WatchsteroidsGame> {
   Radar() : super(anchor: Anchor.center, priority: 10);
 
   static const radarWidth = 400.0;
+
+  static const alertSize = radarWidth * 0.15;
+
+  static final alertPaint = Paint()
+    ..strokeWidth = 4.0
+    ..shader = Gradient.radial(
+      const Offset(alertSize, 0),
+      alertSize,
+      [
+        WatchsteroidsColors.ringColor.withOpacity(0.4),
+        WatchsteroidsColors.ringColor.withOpacity(0.2),
+        WatchsteroidsColors.ringColor.withOpacity(0),
+      ],
+      [0.0, 0.3, 1.0],
+    );
 
   @override
   Future<void> onLoad() async {
@@ -29,8 +45,6 @@ class Radar extends PositionComponent with HasGameRef<WatchsteroidsGame> {
     PositionComponent other,
   ) {
     if (other is AsteroidSprite) {
-      const alertSize = radarWidth * 0.15;
-
       final intersectionPoint = intersectionPoints.first;
       final angle = atan2(intersectionPoint.x, -intersectionPoint.y);
       final CircleComponent alert;
@@ -38,18 +52,7 @@ class Radar extends PositionComponent with HasGameRef<WatchsteroidsGame> {
         alert = CircleComponent(
           anchor: Anchor.center,
           radius: alertSize,
-          paint: Paint()
-            ..strokeWidth = 4.0
-            ..shader = Gradient.radial(
-              const Offset(alertSize, 0),
-              alertSize,
-              [
-                WatchsteroidsColors.ringColor.withOpacity(0.4),
-                WatchsteroidsColors.ringColor.withOpacity(0.2),
-                WatchsteroidsColors.ringColor.withOpacity(0),
-              ],
-              [0.0, 0.3, 1.0],
-            ),
+          paint: alertPaint,
         )
           ..opacity = 0.0
           ..angle = angle,

@@ -99,7 +99,7 @@ class AsteroidSpawner extends Component
   late Timer timer;
 
   Timer get initialTimer => Timer(
-        interval,
+        0,
         onTick: onTick,
         autoStart: false,
       );
@@ -186,7 +186,7 @@ class Asteroid extends PositionComponent
 
   final Path path;
 
-  late int heath = random.nextInt(3) + 1;
+  late int heath = random.nextInt(2) + 2;
 
   void takeHit(Set<Vector2> intersectionPoints, double angle) {
     heath--;
@@ -196,6 +196,7 @@ class Asteroid extends PositionComponent
       gameRef.flameMultiBlocProvider.add(
         AsteroidExplosion(position: absolutePositionOfAnchor(Anchor.center)),
       );
+      gameRef.scoreCubit.point();
     } else {
       for (final intersectionPoint in intersectionPoints) {
         gameRef.flameMultiBlocProvider.add(
@@ -252,6 +253,9 @@ class AsteroidSprite extends SpriteComponent
   AsteroidSprite({super.position}) : super(anchor: Anchor.center);
 
   @override
+  Paint paint = Paint()..blendMode = BlendMode.softLight;
+
+  @override
   Future<void> onLoad() async {
     sprite = await gameRef.loadSprite(
       'protoasteroid2.png',
@@ -276,9 +280,6 @@ class AsteroidSprite extends SpriteComponent
       ),
     );
   }
-
-  @override
-  Paint get paint => Paint()..blendMode = BlendMode.softLight;
 }
 
 class ProtoRenderPath extends Component {
@@ -286,14 +287,15 @@ class ProtoRenderPath extends Component {
 
   final Path path;
 
+  static final paint = Paint()
+    ..color = const Color(0xFF00FF00)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 1;
+
   @override
   void render(Canvas canvas) {
     super.render(canvas);
 
-    final paint = Paint()
-      ..color = const Color(0xFF00FF00)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
     canvas.drawPath(path, paint);
   }
 }

@@ -80,7 +80,7 @@ class Shot extends PositionComponent {
 
     final angle = this.angle;
 
-    const distance = 400;
+    const distance = 250;
 
     final destinationAngle = Vector2(
       math.sin(angle) * distance,
@@ -90,7 +90,7 @@ class Shot extends PositionComponent {
     await add(
       MoveToEffect(
         destinationAngle,
-        LinearEffectController(0.75 + (random.nextDouble() * 0.1)),
+        LinearEffectController(0.35 + (random.nextDouble() * 0.2)),
         onComplete: removeFromParent,
       ),
     );

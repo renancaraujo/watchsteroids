@@ -6,6 +6,7 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/animation.dart';
+import 'package:watchsteroids/app/app.dart';
 import 'package:watchsteroids/game/game.dart';
 
 class ShipContainer extends PositionComponent

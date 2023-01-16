@@ -70,7 +70,7 @@ class _TouchInputControllerInnerState
   }
 
   void handlePanUpdate(DragUpdateDetails details) {
-    if (!isDragging) {
+    if (!isDragging || !gameCubit.isPlaying) {
       return;
     }
 
@@ -84,6 +84,8 @@ class _TouchInputControllerInnerState
     final angleDeltaAbs = angleDelta.abs();
 
     if (angleDeltaAbs > math.pi) {
+      // It was past 3 AM when I wrote this.
+      // I have no idea what is happening here.
       angleDelta = ((2 * math.pi) - angleDeltaAbs) * (sign * -1);
     }
 

@@ -3,26 +3,19 @@ import 'package:flame/effects.dart';
 import 'package:flame/game.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/animation.dart';
+import 'package:watchsteroids/app/app.dart';
 import 'package:watchsteroids/game/game.dart';
-
-class WatchsteroidsColors {
-  static const Color transparent = Color(0x00000000);
-  static const Color vignette = Color(0xFF000000);
-  static const Color background = Color(0xFF010101);
-  static const Color ringColor = Color(0xFFDB7900);
-  static const Color ship = Color(0xFFFBE294);
-  static const Color shipShadow1 = Color(0xFFFB3324);
-  static const Color shipShadow2 = Color(0xFF0485AC);
-}
 
 class WatchsteroidsGame extends FlameGame with HasCollisionDetection {
   WatchsteroidsGame({
     required this.rotationCubit,
     required this.gameCubit,
+    required this.scoreCubit,
   });
 
   final RotationCubit rotationCubit;
   final GameCubit gameCubit;
+  final ScoreCubit scoreCubit;
 
   late final CameraSubject cameraSubject;
 
@@ -150,20 +143,27 @@ class LogoInitial extends SpriteComponent
     duration: 2,
   );
 
+  OpacityEffect? opacityEffect;
+
   @override
   void onNewState(GameState state) {
+    if (!effectController.completed) {
+      effectController.setToEnd();
+      opacityEffect?.removeFromParent();
+    }
+
     switch (state) {
       case GameState.initial:
         effectController.setToStart();
         add(
-          OpacityEffect.to(1, effectController),
+          opacityEffect = OpacityEffect.to(1, effectController),
         );
         break;
       case GameState.playing:
       case GameState.gameOver:
         effectController.setToStart();
         add(
-          OpacityEffect.to(0, effectController),
+          opacityEffect = OpacityEffect.to(0, effectController),
         );
         break;
     }
@@ -190,6 +190,7 @@ class GameStateSyncController extends Component
         break;
       case GameState.playing:
         gameRef.overlays.clear();
+        gameRef.overlays.add('score');
         break;
       case GameState.gameOver:
         gameRef.overlays.clear();

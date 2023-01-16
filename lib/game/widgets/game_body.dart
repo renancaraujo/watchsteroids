@@ -26,10 +26,12 @@ class GameWrapper extends StatefulWidget {
 class _GameWrapperState extends State<GameWrapper> {
   late final rotationCubit = context.read<RotationCubit>();
   late final gameCubit = context.read<GameCubit>();
+  late final scoreCubit = context.read<ScoreCubit>();
 
   late final game = WatchsteroidsGame(
     rotationCubit: rotationCubit,
     gameCubit: gameCubit,
+    scoreCubit: scoreCubit,
   );
 
   @override
@@ -45,7 +47,7 @@ class _GameWrapperState extends State<GameWrapper> {
             ),
             child: AspectRatio(
               aspectRatio: 1,
-              child: Nested(
+              child: Nested( // Thanks Remi!
                 children: const [
                   TouchInputController(),
                   RotaryInputController(),
@@ -59,6 +61,9 @@ class _GameWrapperState extends State<GameWrapper> {
                     },
                     'gameOver': (context, game) {
                       return const GameOverOverlay();
+                    },
+                    'score': (context, game) {
+                      return const ScoreOverlay();
                     },
                   },
                 ),

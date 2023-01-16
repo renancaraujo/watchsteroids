@@ -20,6 +20,7 @@ class GamePage extends StatelessWidget {
       providers: [
         BlocProvider<GameCubit>(create: (_) => GameCubit()),
         BlocProvider<RotationCubit>(create: (context) => RotationCubit()),
+        BlocProvider<ScoreCubit>(create: (context) => ScoreCubit()),
       ],
       child: const Scaffold(
         body: GameView(),

@@ -10,4 +10,4 @@ jobs:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
     with:
       flutter_channel: master
-      min_coverage: 0
+      min_coverage: 0 # Forgive me for I have sinned

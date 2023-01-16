@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/palette.dart';
+import 'package:watchsteroids/app/app.dart';
 import 'package:watchsteroids/game/game.dart';
 
 class NoiseOverlay extends SpriteComponent with HasGameRef<WatchsteroidsGame> {
@@ -55,7 +56,7 @@ class Vignette extends RectangleComponent with HasGameRef<WatchsteroidsGame> {
   PositionType positionType = PositionType.viewport;
 
   @override
-  Paint get paint => BasicPalette.white.paint()
+  Paint paint = BasicPalette.white.paint()
     ..shader = Gradient.radial(
       const Offset(200, 200),
       200,

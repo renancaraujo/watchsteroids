@@ -40,6 +40,7 @@ class _RotaryInputControllerState extends State<_RotaryInputControllerInner> {
   void initState() {
     super.initState();
 
+    // Maybe this shit work on Tizen??
     rotarySubscription = rotaryEvents.listen((RotaryEvent event) {
       if (gameCubit.state == GameState.gameOver) {
         return;

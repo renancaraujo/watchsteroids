@@ -39,6 +39,11 @@ class AsteroidHitCore extends SpriteComponent
     with HasGameRef<WatchsteroidsGame> {
   AsteroidHitCore() : super(anchor: Anchor.center);
 
+  static Paint staticPaint = Paint()..blendMode = BlendMode.hardLight;
+
+  @override
+  final paint = staticPaint;
+
   @override
   Future<void> onLoad() async {
     sprite = await gameRef.loadSprite(
@@ -48,14 +53,16 @@ class AsteroidHitCore extends SpriteComponent
     size = Vector2.all(25);
     opacity = 0.0;
   }
-
-  @override
-  Paint paint = Paint()..blendMode = BlendMode.hardLight;
 }
 
 class AsteroidHitOut extends SpriteComponent
     with HasGameRef<WatchsteroidsGame> {
   AsteroidHitOut() : super(anchor: Anchor.center);
+
+  static Paint staticPaint = Paint()..blendMode = BlendMode.lighten;
+
+  @override
+  final paint = staticPaint;
 
   @override
   Future<void> onLoad() async {
@@ -66,9 +73,6 @@ class AsteroidHitOut extends SpriteComponent
     size = Vector2.all(40);
     opacity = 0.0;
   }
-
-  @override
-  Paint paint = Paint()..blendMode = BlendMode.lighten;
 }
 
 class AsteroidExplosion extends PositionComponent
