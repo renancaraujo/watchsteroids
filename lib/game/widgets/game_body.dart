@@ -1,5 +1,6 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:nested/nested.dart';
 import 'package:watchsteroids/game/game.dart';
 
@@ -33,6 +34,12 @@ class _GameWrapperState extends State<GameWrapper> {
     gameCubit: gameCubit,
     scoreCubit: scoreCubit,
   );
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+  }
 
   @override
   Widget build(BuildContext context) {
