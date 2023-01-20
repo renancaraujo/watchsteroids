@@ -4,6 +4,10 @@
 
 The open source version of an Asteroids-ish game made for WearOS using the Flame Engine and Flutter.
 
+
+<a href='https://play.google.com/store/apps/details?id=gg.renan.watchsteroids&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img width="200" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
+
+
 Project initially generated with the [Very Good CLI](https://cli.vgv.dev/).
 
 Using Flame Engine on top of [Flutter](https://flutter.rip).
