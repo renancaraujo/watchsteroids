@@ -52,27 +52,35 @@ class _GameWrapperState extends State<GameWrapper> {
             constraints: BoxConstraints.loose(
               const Size.square(400),
             ),
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Nested( // Thanks Remi!
-                children: const [
-                  TouchInputController(),
-                  RotaryInputController(),
-                ],
-                child: GameWidget(
-                  game: game,
-                  initialActiveOverlays: const ['initial'],
-                  overlayBuilderMap: {
-                    'initial': (context, game) {
-                      return const InitialOverlay();
+            child: DefaultTextStyle.merge(
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Color(0xFFFBE294),
+                fontSize: 12,
+              ),
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Nested(
+                  // Thanks Remi!
+                  children: const [
+                    TouchInputController(),
+                    RotaryInputController(),
+                  ],
+                  child: GameWidget(
+                    game: game,
+                    initialActiveOverlays: const ['initial'],
+                    overlayBuilderMap: {
+                      'initial': (context, game) {
+                        return const InitialOverlay();
+                      },
+                      'gameOver': (context, game) {
+                        return const GameOverOverlay();
+                      },
+                      'score': (context, game) {
+                        return const ScoreOverlay();
+                      },
                     },
-                    'gameOver': (context, game) {
-                      return const GameOverOverlay();
-                    },
-                    'score': (context, game) {
-                      return const ScoreOverlay();
-                    },
-                  },
+                  ),
                 ),
               ),
             ),

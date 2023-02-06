@@ -1,50 +1,139 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:watchsteroids/game/game.dart';
 
-class InitialOverlay extends StatelessWidget {
+class InitialOverlay extends StatefulWidget {
   const InitialOverlay({super.key});
 
   @override
+  State<InitialOverlay> createState() => _InitialOverlayState();
+}
+
+class _InitialOverlayState extends State<InitialOverlay> {
+  bool showingCredits = false;
+
+  @override
   Widget build(BuildContext context) {
+    final mainMenu = Column(
+      children: [
+
+        const Text('Tap to start'),
+        const Spacer(),
+        BlocBuilder<ScoreCubit, ScoreState>(
+          builder: (context, state) {
+            if (state.highScore == 0) {
+              return const SizedBox.shrink();
+            }
+
+            return Text(
+              'High score: ${state.highScore}',
+              style: const TextStyle(
+                color: Color(0xC0FBE294),
+                fontSize: 10,
+              ),
+            );
+          },
+        ),
+        const Text(
+          'Hold for credits',
+          style: TextStyle(
+            color: Color(0xC0FBE294),
+            fontSize: 9,
+          ),
+        ),
+      ],
+    );
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
+        if (showingCredits) {
+          setState(() {
+            showingCredits = false;
+          });
+          return;
+        }
         final gameCubit = context.read<GameCubit>();
         if (gameCubit.isPlaying) {
           return;
         }
         context.read<GameCubit>().startGame();
       },
+      onLongPress: () {
+        setState(() {
+          showingCredits = !showingCredits;
+        });
+      },
+
+
       child: SizedBox.expand(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 30),
-          child: Column(
+          child: Stack(
+            fit: StackFit.expand,
             children: [
-              const Spacer(),
-              const Text(
-                'Tap to start',
-                style: TextStyle(
-                  color: Color(0xFFFBE294),
-                  fontSize: 12,
-                ),
-              ),
-              BlocBuilder<ScoreCubit, ScoreState>(
-                builder: (context, state) {
-                  if (state.highScore == 0) {
-                    return const SizedBox.shrink();
-                  }
-
-                  return Text(
-                    'High score: ${state.highScore}',
-                    style: const TextStyle(
-                      color: Color(0xC0FBE294),
-                      fontSize: 10,
-                    ),
+              mainMenu,
+              TweenAnimationBuilder(
+                tween: Tween<double>(begin: 0, end: showingCredits ? 1 : 0),
+                duration: const Duration(milliseconds: 250),
+                builder: (context, value, _) {
+                  return CreditsOverlay(
+                    progress: value,
                   );
                 },
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class CreditsOverlay extends StatelessWidget {
+  const CreditsOverlay({super.key, required this.progress});
+
+  final double progress;
+
+  @override
+  Widget build(BuildContext context) {
+    return BackdropFilter(
+      filter: ui.ImageFilter.blur(
+        sigmaX: 10 * progress,
+        sigmaY: 20 * progress,
+      ),
+      child: Opacity(
+        opacity: progress,
+        child: Column(
+          children: const [
+            Spacer(),
+            Text(
+              'Made with ❤️ by',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w300,
+                height: 1.5,
+              ),
+            ),
+            Text(
+              'Renan Araújo',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                height: 1.5,
+              ),
+            ),
+            Text(
+              'renan.gg',
+              style: TextStyle(
+                // fontSize: 14,
+                fontWeight: FontWeight.bold,
+                height: 1.5,
+              ),
+            ),
+            Spacer(),
+          ],
         ),
       ),
     );
@@ -73,10 +162,6 @@ class GameOverOverlay extends StatelessWidget {
             children: [
               const Text(
                 'Game over',
-                style: TextStyle(
-                  color: Color(0xFFFBE294),
-                  fontSize: 12,
-                ),
               ),
               BlocBuilder<ScoreCubit, ScoreState>(
                 builder: (context, state) {
@@ -86,20 +171,12 @@ class GameOverOverlay extends StatelessWidget {
 
                   return Text(
                     'Score: ${state.currentScore}',
-                    style: const TextStyle(
-                      color: Color(0xC0FBE294),
-                      fontSize: 10,
-                    ),
                   );
                 },
               ),
               const Spacer(),
               const Text(
                 'Tap to continue',
-                style: TextStyle(
-                  color: Color(0xFFFBE294),
-                  fontSize: 12,
-                ),
               ),
             ],
           ),
@@ -125,7 +202,6 @@ class ScoreOverlay extends StatelessWidget {
                 Text(
                   '${state.currentScore}',
                   style: const TextStyle(
-                    color: Color(0xFFFBE294),
                     fontSize: 14,
                   ),
                 ),
