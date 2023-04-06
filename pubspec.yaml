@@ -10,7 +10,7 @@ environment:
 dependencies:
   bloc: ^8.1.0
   equatable: ^2.0.5
-  flame: ^1.5.0
+  flame: ^1.7.1
   flame_bloc: ^1.8.1
   flame_svg: ^1.7.0
   flutter:
