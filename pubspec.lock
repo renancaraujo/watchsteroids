@@ -154,14 +154,14 @@ packages:
       name: flame
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.0"
+    version: "1.7.0"
   flame_bloc:
     dependency: "direct main"
     description:
       name: flame_bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.2"
+    version: "1.8.3"
   flame_svg:
     dependency: "direct main"
     description:
