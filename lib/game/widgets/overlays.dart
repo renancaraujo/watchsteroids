@@ -17,7 +17,6 @@ class _InitialOverlayState extends State<InitialOverlay> {
   Widget build(BuildContext context) {
     final mainMenu = Column(
       children: [
-
         const Text('Tap to start'),
         const Spacer(),
         BlocBuilder<ScoreCubit, ScoreState>(
@@ -65,8 +64,6 @@ class _InitialOverlayState extends State<InitialOverlay> {
           showingCredits = !showingCredits;
         });
       },
-
-
       child: SizedBox.expand(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 30),
