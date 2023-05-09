@@ -211,8 +211,10 @@ class ShipGlow extends SpriteComponent
 
   @override
   Future<void> onLoad() async {
-    size = Vector2(270, 270) * 1.5;
-    position = parent.size / 2;
+    size = Vector2(270, 270) * 2.2;
+    position = parent.size.clone()
+      ..x *= 0.5
+      ..y *= -0.9;
     opacity = 0.0;
 
     sprite = await gameRef.loadSprite('shipglow.png');
