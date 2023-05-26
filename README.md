@@ -24,7 +24,7 @@ See my tweet about this [here](https://twitter.com/reNotANumber/status/161499086
 
 ## Running:
 
-- See how to run on a watch device here: 
+- See how to run on a watch device [here](https://developer.android.com/training/wearables/get-started/debugging#wifi-debugging). 
 - This also runs on android devices, but it's not optimized for it.
 
 This project contains 3 flavors:
