@@ -18,7 +18,7 @@ dependencies:
   flutter_bloc: ^8.1.1
   flutter_localizations:
     sdk: flutter
-  hydrated_bloc: ^9.1.1
+  hydrated_bloc: ^9.1.2
   intl: ^0.17.0
   nested: ^1.0.0
   path_provider: ^2.0.14
