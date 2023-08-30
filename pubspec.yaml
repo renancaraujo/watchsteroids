@@ -29,7 +29,7 @@ dev_dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
-  mocktail: ^0.3.0
+  mocktail: ^1.0.0
   very_good_analysis: ^4.0.0+1
 
 flutter:
