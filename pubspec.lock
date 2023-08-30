@@ -721,10 +721,10 @@ packages:
     dependency: "direct main"
     description:
       name: wearable_rotary
-      sha256: b2593dbd0587d9ceadee9264dff9d0d242c7ac5a2e9d75ce346477edab113b41
+      sha256: "13ebd293a1ea271942e04bb3cc9c4dbec92d8491467f719ba44f11ad2c1c6525"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   web_socket_channel:
     dependency: transitive
     description:

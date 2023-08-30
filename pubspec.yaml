@@ -22,7 +22,7 @@ dependencies:
   intl: ^0.17.0
   nested: ^1.0.0
   path_provider: ^2.0.14
-  wearable_rotary: ^2.0.1
+  wearable_rotary: ^2.0.2
 
 dev_dependencies:
   bloc_test: ^9.1.3
