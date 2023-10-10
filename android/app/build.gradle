@@ -51,7 +51,7 @@ android {
     defaultConfig {
         applicationId "gg.renan.watchsteroids"
         minSdkVersion 30
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

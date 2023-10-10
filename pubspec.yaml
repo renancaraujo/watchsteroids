@@ -1,6 +1,6 @@
 name: watchsteroids
 description: The classic asteroids game on your wrist
-version: 0.0.1+3
+version: 0.0.2+5
 publish_to: none
 
 environment:
