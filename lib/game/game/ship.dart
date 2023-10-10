@@ -235,7 +235,6 @@ class ShipGlow extends SpriteComponent
         opacity = 0.0;
       case GameState.gameOver:
         position.y = parent.y / 2;
-
     }
   }
 }
