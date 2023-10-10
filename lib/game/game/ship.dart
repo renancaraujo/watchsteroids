@@ -228,17 +228,14 @@ class ShipGlow extends SpriteComponent
       case GameState.playing:
         position.y = (parent.y / 2) - 20;
         opacity = 1.0;
-        break;
       case GameState.initial:
         parent.parent.ship.angle = 0;
         parent.parent.shadow.angle = 0;
         parent.parent.shadow2.angle = 0;
         opacity = 0.0;
-        break;
       case GameState.gameOver:
         position.y = parent.y / 2;
 
-        break;
     }
   }
 }

@@ -89,7 +89,7 @@ class _InitialOverlayState extends State<InitialOverlay> {
 }
 
 class CreditsOverlay extends StatelessWidget {
-  const CreditsOverlay({super.key, required this.progress});
+  const CreditsOverlay({required this.progress, super.key});
 
   final double progress;
 
