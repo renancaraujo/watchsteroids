@@ -158,14 +158,12 @@ class LogoInitial extends SpriteComponent
         add(
           opacityEffect = OpacityEffect.to(1, effectController),
         );
-        break;
       case GameState.playing:
       case GameState.gameOver:
         effectController.setToStart();
         add(
           opacityEffect = OpacityEffect.to(0, effectController),
         );
-        break;
     }
   }
 }
@@ -187,15 +185,12 @@ class GameStateSyncController extends Component
           calm: true,
         );
         gameRef.rotationCubit.rotateTo(0);
-        break;
       case GameState.playing:
         gameRef.overlays.clear();
         gameRef.overlays.add('score');
-        break;
       case GameState.gameOver:
         gameRef.overlays.clear();
         gameRef.overlays.add('gameOver');
-        break;
     }
   }
 }

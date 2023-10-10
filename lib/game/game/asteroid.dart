@@ -164,11 +164,9 @@ class AsteroidSpawner extends Component
       case GameState.playing:
         timer = initialTimer;
         timer.start();
-        break;
       case GameState.initial:
       case GameState.gameOver:
         timer.stop();
-        break;
     }
   }
 }
@@ -239,11 +237,9 @@ class Asteroid extends PositionComponent
       case GameState.initial:
       case GameState.playing:
         removeFromParent();
-        break;
       case GameState.gameOver:
         rotateEffect?.pause();
         moveAlongPathEffect?.pause();
-        break;
     }
   }
 }
