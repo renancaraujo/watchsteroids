@@ -1,3 +1,4 @@
+import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/game.dart';
@@ -11,7 +12,13 @@ class WatchsteroidsGame extends FlameGame with HasCollisionDetection {
     required this.rotationCubit,
     required this.gameCubit,
     required this.scoreCubit,
-  });
+  }) : super(
+          camera: CameraComponent.withFixedResolution(
+            width: 400,
+            height: 400,
+            hudComponents: [Vignette()],
+          ),
+        );
 
   final RotationCubit rotationCubit;
   final GameCubit gameCubit;
@@ -28,9 +35,7 @@ class WatchsteroidsGame extends FlameGame with HasCollisionDetection {
 
   @override
   Future<void> onLoad() async {
-    await add(Radar());
-
-    await add(
+    await world.add(
       flameMultiBlocProvider = FlameMultiBlocProvider(
         providers: [
           FlameBlocProvider<RotationCubit, RotationState>.value(
@@ -51,15 +56,11 @@ class WatchsteroidsGame extends FlameGame with HasCollisionDetection {
       ),
     );
 
-    await add(NoiseAdd());
-    await add(NoiseOverlay());
-
-    await add(Vignette());
-    await add(cameraSubject = CameraSubject());
-
-    camera
-      ..followComponent(cameraSubject)
-      ..viewport = FixedResolutionViewport(Vector2(400, 400));
+    await world.add(NoiseAdd());
+    await world.add(Radar());
+    await world.add(NoiseOverlay());
+    await world.add(cameraSubject = CameraSubject());
+    camera.follow(cameraSubject);
   }
 }
 

@@ -9,7 +9,7 @@ class AppBlocObserver extends BlocObserver {
   @override
   void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
     super.onChange(bloc, change);
-    // log('onChange(${bloc.runtimeType}, $change)');
+    log('onChange(${bloc.runtimeType}, $change)');
   }
 
   @override
@@ -33,8 +33,5 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
 
   Bloc.observer = AppBlocObserver();
 
-  await runZonedGuarded(
-    () async => runApp(await builder()),
-    (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),
-  );
+  runApp(await builder());
 }

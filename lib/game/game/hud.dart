@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame/palette.dart';
 import 'package:watchsteroids/app/app.dart';
@@ -10,7 +11,7 @@ class NoiseOverlay extends SpriteComponent with HasGameRef<WatchsteroidsGame> {
 
   @override
   Future<void> onLoad() async {
-    size = Vector2.all(600);
+    size = Vector2.all(500);
     sprite = await gameRef.loadSprite('noise7.png');
   }
 
@@ -22,7 +23,7 @@ class NoiseOverlay extends SpriteComponent with HasGameRef<WatchsteroidsGame> {
   @override
   void update(double dt) {
     super.update(dt);
-    position = gameRef.camera.position * -0.35;
+    position = gameRef.cameraSubject.position * -0.5;
   }
 }
 
@@ -41,26 +42,26 @@ class NoiseAdd extends SpriteComponent with HasGameRef<WatchsteroidsGame> {
   @override
   void update(double dt) {
     super.update(dt);
-    position = gameRef.camera.position * -0.15;
+    position = gameRef.cameraSubject.position * 0.15;
   }
 }
 
 class Vignette extends RectangleComponent with HasGameRef<WatchsteroidsGame> {
   @override
   Future<void> onLoad() async {
-    size = Vector2(400, 400);
+    final parent = this.parent! as Viewport;
+    size = parent.size;
     priority = 100;
+
+    paint = BasicPalette.white.paint()
+      ..shader = Gradient.radial(
+        (size / 2).toOffset(),
+        (size / 2).x,
+        [WatchsteroidsColors.transparent, const Color(0xff000000)],
+        [0.45, 1.0],
+      );
   }
 
   @override
   PositionType positionType = PositionType.viewport;
-
-  @override
-  Paint paint = BasicPalette.white.paint()
-    ..shader = Gradient.radial(
-      const Offset(200, 200),
-      200,
-      [WatchsteroidsColors.transparent, const Color(0xFF000000)],
-      [0.45, 1.0],
-    );
 }
