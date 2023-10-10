@@ -102,8 +102,8 @@ class CreditsOverlay extends StatelessWidget {
       ),
       child: Opacity(
         opacity: progress,
-        child: Column(
-          children: const [
+        child: const Column(
+          children: [
             Spacer(),
             Text(
               'Made with ❤️ by',
