@@ -173,10 +173,10 @@ packages:
     dependency: "direct main"
     description:
       name: flame
-      sha256: "042533edc7ded96c2a439b2eae1a905f2611447d0d106b33686b841371c8d8c5"
+      sha256: b6bb76224fc29fd5eea25d66cda6e322e3678bdedc1f65956c6151326a6a798b
       url: "https://pub.dev"
     source: hosted
-    version: "1.10.0"
+    version: "1.10.1"
   flame_bloc:
     dependency: "direct main"
     description:
@@ -189,10 +189,10 @@ packages:
     dependency: "direct main"
     description:
       name: flame_svg
-      sha256: fe59fd95439ae7145c07c36ee1a69e56745a15015629d0233356bfa8c5533020
+      sha256: "815f4e351c3a072dbc792c9371757538361c1c0df72ed59c2e3267453a34a70e"
       url: "https://pub.dev"
     source: hosted
-    version: "1.8.3"
+    version: "1.8.5"
   flutter:
     dependency: "direct main"
     description: flutter
