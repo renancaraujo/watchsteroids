@@ -173,18 +173,18 @@ packages:
     dependency: "direct main"
     description:
       name: flame
-      sha256: "042533edc7ded96c2a439b2eae1a905f2611447d0d106b33686b841371c8d8c5"
+      sha256: da1812e2f17a8ffd5d43ea6a83137794e7f482bcf50419bc9847b8efdb39f791
       url: "https://pub.dev"
     source: hosted
-    version: "1.10.0"
+    version: "1.17.0"
   flame_bloc:
     dependency: "direct main"
     description:
       name: flame_bloc
-      sha256: b593d3661cfb32acff2a699b0f559cca6e6fbe0e6dba95030c880f293d2eba60
+      sha256: d2aacebddb55427c0bde4eedadcbeb1c2fb8fc63df6edd26b4da201e30513e4d
       url: "https://pub.dev"
     source: hosted
-    version: "1.10.4"
+    version: "1.11.1"
   flame_svg:
     dependency: "direct main"
     description:
