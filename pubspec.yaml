@@ -24,7 +24,7 @@ dependencies:
   wearable_rotary: ^2.0.2
 
 dev_dependencies:
-  bloc_test: ^9.1.3
+  bloc_test: ^9.1.7
   flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
