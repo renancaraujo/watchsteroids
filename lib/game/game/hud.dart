@@ -49,8 +49,7 @@ class NoiseAdd extends SpriteComponent with HasGameRef<WatchsteroidsGame> {
 class Vignette extends RectangleComponent with HasGameRef<WatchsteroidsGame> {
   @override
   Future<void> onLoad() async {
-    final parent = this.parent! as Viewport;
-    size = parent.size;
+    size = game.size;
     priority = 100;
 
     paint = BasicPalette.white.paint()
