@@ -61,7 +61,4 @@ class Vignette extends RectangleComponent with HasGameRef<WatchsteroidsGame> {
         [0.45, 1.0],
       );
   }
-
-  @override
-  PositionType positionType = PositionType.viewport;
 }

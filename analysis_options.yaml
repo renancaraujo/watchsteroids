@@ -12,6 +12,7 @@ analyzer:
     collection_methods_unrelated_type: warning
     unrelated_type_equality_checks: warning
     public_member_api_docs: ignore
+    overridden_fields: ignore
 
   exclude:
     - test/.test_coverage.dart
