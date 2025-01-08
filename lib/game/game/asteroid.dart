@@ -94,7 +94,7 @@ class AsteroidSpawner extends Component
     timer = initialTimer;
   }
 
-  static const interval = 2.0;
+  static const interval = 3.0;
 
   late Timer timer;
 
@@ -105,7 +105,7 @@ class AsteroidSpawner extends Component
       );
 
   void onTick() {
-    final nextPeriod = random.nextDouble() * 0.5 + interval;
+    final nextPeriod = random.nextDouble() * 0.3 + interval;
     timer = Timer(
       nextPeriod,
       onTick: onTick,
@@ -184,7 +184,7 @@ class Asteroid extends PositionComponent
 
   final Path path;
 
-  late int heath = random.nextInt(2) + 2;
+  late int heath = (random.nextDouble() < 0.75) ? 2 : 3;
 
   void takeHit(Set<Vector2> intersectionPoints, double angle) {
     heath--;
@@ -225,7 +225,7 @@ class Asteroid extends PositionComponent
     await add(
       moveAlongPathEffect = MoveAlongPathEffect(
         path,
-        LinearEffectController(random.nextDouble() * 10 + 12),
+        LinearEffectController(random.nextDouble() * 5 + 14),
         onComplete: removeFromParent,
       ),
     );
