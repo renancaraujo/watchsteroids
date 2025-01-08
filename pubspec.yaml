@@ -29,6 +29,5 @@ flutter:
   generate: true
   assets: 
     - assets/images/
-    - shorebird.yaml
 
 flutter_icons:
