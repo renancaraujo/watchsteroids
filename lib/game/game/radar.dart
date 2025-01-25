@@ -21,9 +21,9 @@ class Radar extends PositionComponent with HasGameRef<WatchsteroidsGame> {
       const Offset(alertSize, 0),
       alertSize,
       [
-        WatchsteroidsColors.ringColor.withOpacity(0.4),
-        WatchsteroidsColors.ringColor.withOpacity(0.2),
-        WatchsteroidsColors.ringColor.withOpacity(0),
+        WatchsteroidsColors.ringColor.withValues(alpha: 255 * .4),
+        WatchsteroidsColors.ringColor.withValues(alpha: 255 * 0.2),
+        WatchsteroidsColors.ringColor.withValues(alpha: 0),
       ],
       [0.0, 0.3, 1.0],
     );
