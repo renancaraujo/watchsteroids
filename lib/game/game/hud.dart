@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame/palette.dart';
 import 'package:watchsteroids/app/app.dart';
