@@ -21,10 +21,10 @@ packages:
     dependency: "direct main"
     description:
       name: bloc
-      sha256: "106842ad6569f0b60297619e9e0b1885c2fb9bf84812935490e6c5275777804e"
+      sha256: "52c10575f4445c61dd9e0cafcc6356fdd827c4c64dd7945ef3c4105f6b6ac189"
       url: "https://pub.dev"
     source: hosted
-    version: "8.1.4"
+    version: "9.0.0"
   characters:
     dependency: transitive
     description:
@@ -77,26 +77,26 @@ packages:
     dependency: "direct main"
     description:
       name: flame
-      sha256: "0bd0d5bfaf270e4c1624f8d966ca42951479d1b59371058898bdd6ce41bce27a"
+      sha256: "75eb2b2814a0af2686e9f36649f72249f1921b565d11d5bf956d17f9d8cfa67f"
       url: "https://pub.dev"
     source: hosted
-    version: "1.23.0"
+    version: "1.24.0"
   flame_bloc:
     dependency: "direct main"
     description:
       name: flame_bloc
-      sha256: "7a6cacd9b4d7ddfbe72d3e9facd49c164b084e85dfdd4c2b5a7192bd1da066bb"
+      sha256: b68a06460fffb0e73142ac09d6019d426f0c3d90e7de2cf73d69beb8a2eb2572
       url: "https://pub.dev"
     source: hosted
-    version: "1.12.5"
+    version: "1.12.6"
   flame_svg:
     dependency: "direct main"
     description:
       name: flame_svg
-      sha256: "91353ee52be9de93c0a10566f2fb4d60e9000cd922efd64264c6d7193e3b9220"
+      sha256: "957b57eec46652775f53464b9e5b83ac26f5a8436c584a62d23bcbfade27b8bf"
       url: "https://pub.dev"
     source: hosted
-    version: "1.11.4"
+    version: "1.11.5"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -106,10 +106,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_bloc
-      sha256: b594505eac31a0518bdcb4b5b79573b8d9117b193cc80cc12e17d639b10aa27a
+      sha256: "153856bdaac302bbdc58a1d1403d50c40557254aa05eaeed40515d88a25a526b"
       url: "https://pub.dev"
     source: hosted
-    version: "8.1.6"
+    version: "9.0.0"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -123,14 +123,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.16"
-  hive:
+  hive_ce:
     dependency: transitive
     description:
-      name: hive
-      sha256: "8dcf6db979d7933da8217edcec84e9df1bdb4e4edc7fc77dbd5aa74356d6d941"
+      name: hive_ce
+      sha256: ac66daee46ad46486a1ed12cf91e9d7479c875fb46889be8d2c96b557406647f
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.3"
+    version: "2.10.1"
   http:
     dependency: transitive
     description:
@@ -151,10 +151,10 @@ packages:
     dependency: "direct main"
     description:
       name: hydrated_bloc
-      sha256: af35b357739fe41728df10bec03aad422cdc725a1e702e03af9d2a41ea05160c
+      sha256: "5401d5df7d800256a0d1ae16b5d8b518dd44c50d412fe96c6a96d8a4ea85a938"
       url: "https://pub.dev"
     source: hosted
-    version: "9.1.5"
+    version: "10.0.0"
   intl:
     dependency: "direct main"
     description:
