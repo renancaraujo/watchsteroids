@@ -9,9 +9,9 @@ environment:
 dependencies:
   bloc: ^9.0.0
   equatable: ^2.0.7
-  flame: ^1.24.0
-  flame_bloc: ^1.12.6
-  flame_svg: ^1.11.5
+  flame: ^1.25.0
+  flame_bloc: ^1.12.7
+  flame_svg: ^1.11.6
   flutter:
     sdk: flutter
   flutter_bloc: ^9.0.0
