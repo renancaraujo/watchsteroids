@@ -13,8 +13,8 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "gg.renan.watchsteroids"
-    compileSdk = 34
-    ndkVersion = flutter.ndkVersion
+    compileSdk 34
+    ndkVersion = '26.1.10909125'
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -28,11 +28,9 @@ android {
     defaultConfig {
         applicationId "gg.renan.watchsteroids"
         minSdkVersion 33
-        targetSdkVersion 33
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        targetSdkVersion 34
+        versionCode flutter.versionCode
+        versionName flutter.versionName
         manifestPlaceholders = [appName: "Watchsteroids debug"]
     }
 
